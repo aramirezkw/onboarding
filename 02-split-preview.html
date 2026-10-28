@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>02 · Split Preview · KWIQ onboarding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --action:#006C84; --action-hover:#005569; --action-tint:#E1EEF1; --action-tint-2:#F0F7F9;
+  --label-1:#1B2329; --label-2:#4A5862; --label-3:#7A8791;
+  --page:#F4F6F8; --container:#FFFFFF; --tinted:#F7F9FA; --divider:#E2E7EB;
+  --preview-bg:#EEF4F6;
+  --success:#1F8A55; --success-tint:#E5F4EC; --warn:#B86E00; --warn-tint:#FFF4E0; --hot:#B42318; --hot-tint:#FDECEC;
+  --kw-red:#CC0000;
+  --r:12px; --r-sm:8px; --r-xs:6px; --r-full:999px;
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:20px; --space-6:24px; --space-8:32px; --space-10:40px; --space-12:48px; --space-16:64px;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --rowh:48px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Mulish',system-ui,sans-serif;font-size:14px;line-height:20px;color:var(--label-1);background:#fff;overflow:hidden;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+svg{display:block}
+.split{display:flex;height:100vh;min-width:1000px}
+
+/* ================= LEFT ================= */
+.left{flex:0 0 50%;display:flex;flex-direction:column;padding:var(--space-8) var(--space-16) var(--space-8);background:#fff;position:relative;z-index:2;overflow:hidden;transition:flex-basis .8s var(--ease),padding .8s var(--ease),opacity .4s var(--ease)}
+.lhead{display:flex;align-items:center;gap:var(--space-3);flex:none}
+.kw{width:32px;height:32px;border-radius:var(--r-xs);background:var(--kw-red);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;letter-spacing:-.02em;flex:none}
+.lhead .t{font-weight:800;font-size:16px;white-space:nowrap}
+.lhead .t span{color:var(--label-3);font-weight:700}
+.skip{margin-left:auto;font-weight:700;font-size:14px;color:var(--label-2);padding:8px 12px;border-radius:var(--r-sm);white-space:nowrap}
+.skip:hover{background:var(--tinted);color:var(--label-1)}
+.progress{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:var(--space-8);flex:none}
+.progress button{height:4px;border-radius:var(--r-full);background:var(--divider);position:relative;overflow:hidden;padding:0}
+.progress button::after{content:"";position:absolute;inset:0;background:var(--action);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
+.progress button.done::after,.progress button.on::after{transform:scaleX(1)}
+.progress button.on::after{background:linear-gradient(90deg,var(--action),#2AA3BF)}
+.lbody{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;padding:var(--space-8) 0;max-width:520px;overflow:auto}
+.eyebrow{display:flex;align-items:center;gap:var(--space-2);font-size:14px;font-weight:800;color:var(--action);margin-bottom:var(--space-4)}
+.eyebrow .num{font-variant-numeric:tabular-nums;background:var(--action-tint);padding:2px 10px;border-radius:var(--r-full)}
+.eyebrow .nm{color:var(--label-3);font-weight:700}
+h1{font-size:32px;line-height:40px;font-weight:800;letter-spacing:-.015em}
+.lede{font-size:16px;line-height:24px;color:var(--label-2);margin-top:var(--space-3)}
+.lfoot{display:flex;align-items:center;gap:var(--space-3);flex:none;padding-top:var(--space-4);border-top:1px solid var(--divider)}
+.hint{font-size:12px;line-height:16px;color:var(--label-3);font-weight:700;display:flex;align-items:center;gap:6px;margin-right:auto;white-space:nowrap}
+.k{font-size:11px;font-weight:800;color:var(--label-2);border:1px solid var(--divider);border-bottom-width:2px;border-radius:4px;padding:0 5px;line-height:16px;background:#fff}
+.btn{height:44px;padding:0 var(--space-6);border-radius:var(--r-sm);font-weight:800;font-size:14px;display:inline-flex;align-items:center;gap:8px;transition:background .2s,box-shadow .2s,transform .1s;white-space:nowrap}
+.btn:active{transform:translateY(1px)}
+.btn svg{width:16px;height:16px}
+.btn-primary{background:var(--action);color:#fff}
+.btn-primary:hover{background:var(--action-hover)}
+.btn-secondary{border:1px solid var(--divider);background:#fff}
+.btn-secondary:hover{background:var(--tinted)}
+.btn-ghost{color:var(--label-2)}
+.btn-ghost:hover{background:var(--tinted);color:var(--label-1)}
+.btn-sm{height:36px;padding:0 14px;font-size:13px}
+.btn[hidden]{display:none}
+.btn:disabled{opacity:.5;cursor:default}
+:focus-visible{outline:2px solid var(--action);outline-offset:2px}
+.link{color:var(--action);font-weight:800;padding:6px 8px;border-radius:var(--r-xs)}
+.link:hover{background:var(--action-tint)}
+.note{display:flex;gap:8px;align-items:flex-start;font-size:12px;line-height:16px;color:var(--label-3);margin-top:var(--space-4)}
+.note svg{width:14px;height:14px;flex:none;margin-top:1px}
+
+.enter{animation:enter .5s var(--ease) both}
+.enter.back{animation-name:enterBack}
+@keyframes enter{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes enterBack{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+.enter > *{animation:enter .5s var(--ease) both}
+.enter > *:nth-child(2){animation-delay:.05s}.enter > *:nth-child(3){animation-delay:.1s}.enter > *:nth-child(4){animation-delay:.15s}.enter > *:nth-child(5){animation-delay:.2s}.enter > *:nth-child(6){animation-delay:.25s}
+
+/* welcome */
+.vals{list-style:none;margin-top:var(--space-6);display:grid;gap:var(--space-3)}
+.vals li{display:flex;gap:12px;align-items:center;font-weight:700;color:var(--label-1)}
+.vals i{width:28px;height:28px;border-radius:var(--r-sm);display:grid;place-items:center;background:var(--action-tint);color:var(--action);flex:none}
+.vals i svg{width:16px;height:16px}
+.cta-row{display:flex;gap:var(--space-2);margin-top:var(--space-8)}
+
+/* capabilities list */
+.caps{margin-top:var(--space-6);border-top:1px solid var(--divider)}
+.cap{width:100%;text-align:left;display:grid;grid-template-columns:40px 1fr auto;gap:0 var(--space-3);padding:var(--space-4) 0;border-bottom:1px solid var(--divider);align-items:start;position:relative}
+.cap .n{font-size:13px;font-weight:800;color:var(--label-3);font-variant-numeric:tabular-nums;padding-top:2px;transition:color .25s}
+.cap b{font-size:16px;line-height:24px;font-weight:800;display:block}
+.cap .tg{font-size:14px;color:var(--label-2)}
+.cap .d{grid-column:2/3;font-size:14px;line-height:20px;color:var(--label-2);max-height:0;opacity:0;overflow:hidden;transition:max-height .4s var(--ease),opacity .3s,margin .3s}
+.cap .ar{color:var(--label-3);transition:transform .3s var(--ease),color .3s}
+.cap .ar svg{width:18px;height:18px}
+.cap::before{content:"";position:absolute;left:-16px;top:16px;bottom:16px;width:3px;border-radius:2px;background:var(--action);transform:scaleY(0);transition:transform .3s var(--ease)}
+.cap.on::before{transform:scaleY(1)}
+.cap.on .n{color:var(--action)}
+.cap.on .ar{color:var(--action);transform:translateX(4px)}
+.cap.on .d{max-height:60px;opacity:1;margin-top:6px}
+.cap .d b{display:inline;font-size:inherit;line-height:inherit;color:var(--label-1)}
+
+/* personalize */
+.feats{display:grid;gap:var(--space-2);margin-top:var(--space-6)}
+.tog{display:flex;align-items:center;gap:var(--space-3);padding:10px 14px;border:1px solid var(--divider);border-radius:var(--r-sm);text-align:left;transition:background .2s,border-color .2s}
+.tog:hover{border-color:#BCD5DC}
+.tog .ic{width:28px;height:28px;border-radius:var(--r-xs);display:grid;place-items:center;background:var(--action-tint);color:var(--action);flex:none;transition:all .25s}
+.tog .ic svg{width:16px;height:16px}
+.tog[aria-checked="false"] .ic{background:var(--tinted);color:var(--label-3)}
+.tog b{font-weight:800}
+.tog span.tg{color:var(--label-3);font-size:13px;margin-left:6px}
+.sw{margin-left:auto;width:36px;height:20px;border-radius:var(--r-full);background:#C9D2D8;position:relative;flex:none;transition:background .25s var(--ease)}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2);transition:transform .25s var(--ease)}
+.tog[aria-checked="true"] .sw{background:var(--action)}
+.tog[aria-checked="true"] .sw::after{transform:translateX(16px)}
+.lbl{font-size:12px;line-height:16px;font-weight:800;color:var(--label-2);margin:var(--space-5) 0 var(--space-2);text-transform:uppercase;letter-spacing:.06em}
+.tones{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-2)}
+.tones button{border:1px solid var(--divider);border-radius:var(--r-sm);padding:10px 12px;text-align:left;transition:all .2s}
+.tones button b{display:block;font-weight:800}
+.tones button small{font-size:12px;line-height:16px;color:var(--label-3)}
+.tones button:hover{border-color:#BCD5DC}
+.tones button[aria-checked="true"]{border-color:var(--action);background:var(--action-tint-2);box-shadow:0 0 0 3px rgba(0,108,132,.12)}
+.tones button[aria-checked="true"] b{color:var(--action)}
+.trust{display:flex;gap:10px;margin-top:var(--space-5);padding:12px 14px;border-radius:var(--r-sm);background:var(--success-tint);color:#1A5C3B;font-weight:700;font-size:13px;line-height:18px}
+.trust svg{width:16px;height:16px;flex:none;margin-top:1px}
+
+/* try it */
+.lead{margin-top:var(--space-6);border:1px solid var(--divider);border-radius:var(--r);padding:var(--space-4) var(--space-5);display:grid;grid-template-columns:auto 1fr auto;gap:var(--space-3) var(--space-4);align-items:center}
+.lead .ini{width:44px;height:44px;font-size:15px}
+.lead h4{font-size:16px;line-height:20px;font-weight:800}
+.lead .meta{font-size:12px;line-height:16px;color:var(--label-3);font-weight:700}
+.score{font-size:24px;line-height:32px;font-weight:800;color:var(--action);text-align:right}
+.score small{display:block;font-size:11px;line-height:12px;color:var(--label-3);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.sigs{grid-column:1/-1;display:grid;gap:6px;padding-top:var(--space-3);border-top:1px solid var(--divider)}
+.sigs div{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--label-2)}
+.sigs svg{width:14px;height:14px;color:var(--action);flex:none}
+.acts{display:flex;gap:var(--space-2);margin-top:var(--space-5);flex-wrap:wrap}
+.acts .push{margin-left:auto}
+.used{display:flex;align-items:center;gap:8px;margin-top:var(--space-5);padding:12px 14px;border-radius:var(--r-sm);background:var(--success-tint);color:var(--success);font-weight:800}
+.used svg{width:18px;height:18px}
+.used button{margin-left:auto;color:var(--success);font-weight:800}
+
+/* done */
+.where{list-style:none;margin-top:var(--space-6);display:grid;gap:var(--space-2)}
+.where li{display:flex;gap:12px;align-items:center;padding:12px 14px;border:1px solid var(--divider);border-radius:var(--r-sm);transition:border-color .2s,background .2s;cursor:default}
+.where li:hover{border-color:var(--action);background:var(--action-tint-2)}
+.where .pn{width:24px;height:24px;border-radius:50%;background:var(--action);color:#fff;font-size:12px;font-weight:800;display:grid;place-items:center;flex:none}
+.where b{font-weight:800}.where span{color:var(--label-2)}
+.where .k{margin-left:auto}
+
+/* ================= RIGHT (preview) ================= */
+.right{flex:1 1 50%;min-width:0;background:var(--preview-bg);position:relative;display:flex;align-items:center;justify-content:center;padding:var(--space-10);overflow:hidden;transition:padding .8s var(--ease)}
+.right::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 1px 1px,rgba(0,108,132,.12) 1px,transparent 1.5px) 0 0/20px 20px;mask-image:radial-gradient(ellipse at 60% 40%,#000 20%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse at 60% 40%,#000 20%,transparent 75%);pointer-events:none;transition:opacity .6s}
+.live{position:absolute;top:var(--space-4);right:var(--space-5);display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:var(--action);transition:opacity .4s}
+.live i{width:8px;height:8px;border-radius:50%;background:var(--action);box-shadow:0 0 0 0 rgba(0,108,132,.4);animation:livepulse 2s infinite}
+@keyframes livepulse{0%{box-shadow:0 0 0 0 rgba(0,108,132,.4)}70%{box-shadow:0 0 0 8px rgba(0,108,132,0)}100%{box-shadow:0 0 0 0 rgba(0,108,132,0)}}
+.win{container-type:inline-size;position:relative;width:100%;max-width:760px;height:100%;max-height:780px;background:#fff;border-radius:var(--r);box-shadow:0 30px 70px rgba(14,52,64,.16),0 4px 14px rgba(14,52,64,.08);display:grid;grid-template-columns:56px 1fr;overflow:hidden;transition:max-width .8s var(--ease),max-height .8s var(--ease),border-radius .8s var(--ease),box-shadow .8s}
+.wsb{background:#fff;border-right:1px solid var(--divider);display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:6px}
+.wsb .kw{width:28px;height:28px;font-size:11px;margin-bottom:10px}
+.wsb span{width:36px;height:36px;border-radius:var(--r-sm);display:grid;place-items:center;color:var(--label-3)}
+.wsb span.on{background:var(--action-tint);color:var(--action)}
+.wsb svg{width:18px;height:18px}
+.wmain{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--page)}
+.wtop{height:52px;background:#fff;border-bottom:1px solid var(--divider);display:flex;align-items:center;gap:var(--space-3);padding:0 var(--space-4);flex:none;position:relative}
+.wsearch{flex:1;max-width:320px;height:32px;border:1px solid var(--divider);background:var(--tinted);border-radius:var(--r-xs);display:flex;align-items:center;gap:8px;padding:0 10px;font-size:12px;color:var(--label-3);font-weight:700;position:relative;white-space:nowrap;overflow:visible}
+.wsearch svg{width:14px;height:14px;flex:none}
+.wsearch .k{margin-left:auto}
+.wkwiq{margin-left:auto;height:32px;padding:0 12px 0 8px;border-radius:var(--r-full);background:var(--action);color:#fff;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;position:relative;flex:none}
+.wkwiq svg{width:14px;height:14px}
+.wkwiq.glow{animation:glow 2.4s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(0,108,132,.35)}50%{box-shadow:0 0 0 8px rgba(0,108,132,0)}}
+.wav{width:30px;height:30px;border-radius:50%;background:#2E4A58;color:#fff;font-size:11px;font-weight:800;display:grid;place-items:center;flex:none}
+.wbody{flex:1;min-height:0;display:flex;flex-direction:column;padding:var(--space-4);gap:var(--space-3);overflow:hidden}
+.whead{display:flex;align-items:center;gap:var(--space-3);flex:none}
+.whead h3{font-size:20px;line-height:24px;font-weight:800}
+.wtabs{display:flex;gap:2px;background:#fff;border:1px solid var(--divider);border-radius:var(--r-xs);padding:2px;position:relative}
+.wtabs > span{padding:4px 10px;border-radius:4px;font-size:12px;font-weight:800;color:var(--label-2);position:relative}
+.wtabs > span.on{background:var(--action);color:#fff}
+.sortby{margin-left:auto;font-size:12px;font-weight:700;color:var(--label-3);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.sortby b{color:var(--label-1);font-weight:800;transition:color .3s}
+.sortby.ai b{color:var(--action)}
+.sortby svg{width:12px;height:12px;color:var(--action)}
+
+.region{transition:opacity .45s var(--ease),filter .45s var(--ease),box-shadow .35s var(--ease),transform .45s var(--ease)}
+.region.dim{opacity:.38;filter:saturate(.4)}
+.region.focus{box-shadow:0 0 0 2px var(--action),0 10px 30px rgba(0,108,132,.18)}
+.region.off{opacity:.3;filter:grayscale(1)}
+.offtag{position:absolute;top:8px;right:8px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--label-2);background:#fff;border:1px solid var(--divider);padding:1px 6px;border-radius:var(--r-full);opacity:0;transition:opacity .3s}
+.region.off .offtag{opacity:1}
+
+.ask{flex:none;height:44px;background:#fff;border:1px solid var(--divider);border-radius:var(--r-sm);display:flex;align-items:center;gap:10px;padding:0 6px 0 8px;position:relative;font-size:13px;font-weight:700;color:var(--label-3)}
+.ask .sp{width:28px;height:28px;border-radius:var(--r-xs);background:linear-gradient(145deg,#0A87A3,#005569);display:grid;place-items:center;flex:none}
+.ask .sp svg{width:15px;height:15px;color:#fff}
+.ask .q{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ask .q.typed{color:var(--label-1)}
+.ask .res{font-size:11px;font-weight:800;color:#fff;background:var(--action);padding:4px 8px;border-radius:var(--r-full);opacity:0;transform:scale(.8);transition:all .3s var(--ease);white-space:nowrap}
+.ask .res.show{opacity:1;transform:none}
+
+.tbl{flex:none;background:#fff;border:1px solid var(--divider);border-radius:var(--r-sm);overflow:hidden;position:relative}
+.trow{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1.6fr) 84px 72px;align-items:center;gap:var(--space-3);padding:0 var(--space-4)}
+.thead{height:32px;font-size:11px;font-weight:800;color:var(--label-3);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--divider);background:var(--tinted)}
+.thead .sc-h{text-align:right;display:flex;justify-content:flex-end;align-items:center;gap:4px;transition:opacity .3s}
+.thead .sc-h svg{width:11px;height:11px;color:var(--action)}
+.rows{position:relative;height:calc(var(--rowh) * 7)}
+.rows.instant .row{transition:none}
+.row{position:absolute;left:0;right:0;height:var(--rowh);border-bottom:1px solid var(--divider);transition:transform .7s var(--ease),background .3s,opacity .4s;will-change:transform}
+.row:last-child{border-bottom-color:transparent}
+.row .nm{display:flex;align-items:center;gap:10px;font-weight:800;font-size:13px;min-width:0}
+.row .nm span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ini{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:800;color:#fff;flex:none}
+.row .sig{font-size:12px;color:var(--label-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pill{display:inline-block;padding:2px 8px;border-radius:var(--r-full);font-size:11px;line-height:16px;font-weight:800;background:var(--tinted);color:var(--label-2);justify-self:start}
+.pill.hot{background:var(--hot-tint);color:var(--hot)}.pill.warm{background:var(--warn-tint);color:var(--warn)}.pill.new{background:var(--action-tint);color:var(--action)}
+.row .sc{justify-self:end;display:flex;align-items:center;gap:6px;transition:opacity .35s}
+.row .bar{width:28px;height:4px;border-radius:2px;background:var(--divider);overflow:hidden}
+.row .bar i{display:block;height:100%;background:var(--action);border-radius:2px;transform-origin:left;transition:transform .8s var(--ease)}
+.row .sc b{font-size:13px;font-weight:800;width:20px;text-align:right;font-variant-numeric:tabular-nums}
+.noscore .row .sc,.noscore .thead .sc-h{opacity:.25}
+.noscore .row .bar i{transform:scaleX(0)!important}
+.row.hl{background:var(--action-tint-2)}
+.row.hl::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:0 2px 2px 0;background:var(--action)}
+.row.faded{opacity:.3}
+.row.sel{background:var(--action-tint-2)}
+.row .rk{position:absolute;left:4px;top:50%;transform:translateY(-50%);font-size:9px;font-weight:800;color:var(--action);opacity:0;transition:opacity .3s}
+
+.dock{flex:1;min-height:0;display:grid;grid-template-columns:1.25fr 1fr;gap:var(--space-3);transition:all .5s var(--ease)}
+.dcard{background:#fff;border:1px solid var(--divider);border-radius:var(--r-sm);padding:12px 14px;position:relative;display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.dcard h5{font-size:12px;line-height:16px;font-weight:800;display:flex;align-items:center;gap:6px;color:var(--label-2)}
+.dcard h5 svg{width:14px;height:14px;color:var(--action)}
+.dcard h5 .tt{margin-left:auto;color:var(--action);background:var(--action-tint);padding:1px 8px;border-radius:var(--r-full);font-size:11px;transition:opacity .3s}
+.dtext{margin-top:8px;font-size:13px;line-height:20px;color:var(--label-1);outline:none;flex:1;min-height:0;overflow:auto;border-radius:var(--r-xs)}
+.dtext[contenteditable="true"]{background:#FFFDF5;box-shadow:0 0 0 2px #F2D27A;padding:6px 8px}
+.dfoot{display:flex;gap:6px;margin-top:8px;flex:none}
+.dfoot span{font-size:11px;font-weight:800;padding:4px 9px;border-radius:var(--r-full);border:1px solid var(--divider);color:var(--label-2);transition:all .3s}
+.dfoot span.p{background:var(--action);border-color:var(--action);color:#fff;margin-left:auto}
+.dfoot span.flash{background:var(--action-tint);border-color:var(--action);color:var(--action)}
+.dsum ul{list-style:none;margin-top:8px}
+.dsum li{font-size:12px;line-height:18px;color:var(--label-2);padding-left:12px;position:relative}
+.dsum li::before{content:"";position:absolute;left:2px;top:7px;width:4px;height:4px;border-radius:50%;background:var(--action)}
+.dsum .task{margin-top:auto;display:inline-flex;align-self:flex-start;align-items:center;gap:6px;font-size:11px;font-weight:800;color:var(--success);background:var(--success-tint);padding:3px 8px;border-radius:var(--r-full)}
+.dsum .task svg{width:11px;height:11px}
+.dsum .meta{font-size:11px;color:var(--label-3);font-weight:700;margin-top:2px}
+.try .dock{grid-template-columns:1fr 0fr;gap:0}
+.try .dsum{opacity:0;padding:0;border:0}
+.sent-msg{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:var(--success);margin-top:8px}
+.sent-msg svg{width:14px;height:14px}
+.thinking{display:inline-flex;gap:4px;align-items:center;color:var(--label-3);font-size:12px;font-weight:700}
+.thinking i{width:5px;height:5px;border-radius:50%;background:var(--action);animation:bob 1s ease-in-out infinite}
+.thinking i:nth-child(2){animation-delay:.15s}.thinking i:nth-child(3){animation-delay:.3s}
+@keyframes bob{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+.caret{display:inline-block;width:2px;height:1em;background:var(--action);vertical-align:-2px;margin-left:1px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+.greet{position:absolute;right:16px;top:60px;width:260px;background:#fff;border-radius:var(--r-sm);box-shadow:0 16px 40px rgba(14,52,64,.18);border:1px solid var(--divider);padding:12px 14px;z-index:5;opacity:0;transform:translateY(-8px) scale(.98);transition:all .45s var(--ease);pointer-events:none}
+.greet.show{opacity:1;transform:none}
+.greet::before{content:"";position:absolute;top:-6px;right:44px;width:12px;height:12px;background:#fff;border-left:1px solid var(--divider);border-top:1px solid var(--divider);transform:rotate(45deg)}
+.greet b{font-weight:800;font-size:13px;display:block}
+.greet p{font-size:12px;line-height:18px;color:var(--label-2);margin-top:2px}
+.greet .g-act{display:flex;gap:6px;margin-top:8px}
+.greet .g-act span{font-size:11px;font-weight:800;padding:3px 8px;border-radius:var(--r-full);background:var(--action-tint);color:var(--action)}
+
+.pin{position:absolute;width:22px;height:22px;border-radius:50%;background:var(--label-1);color:#fff;font-size:11px;font-weight:800;display:grid;place-items:center;box-shadow:0 0 0 3px #fff,0 4px 10px rgba(0,0,0,.2);z-index:6;opacity:0;transform:scale(0);transition:opacity .3s,transform .45s cubic-bezier(.3,1.6,.5,1)}
+.pin.show{opacity:1;transform:scale(1)}
+.pin.p1{top:-8px;right:-8px}.pin.p2{top:-10px;right:-10px}.pin.p3{top:-12px;right:-12px}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:var(--label-1);color:#fff;padding:12px 16px;border-radius:var(--r-sm);font-weight:700;display:flex;align-items:center;gap:12px;opacity:0;pointer-events:none;transition:all .4s var(--ease);z-index:20;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+.toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.toast svg{width:18px;height:18px;color:#7FD3E6}
+.toast button{color:#7FD3E6;font-weight:800}
+
+/* launched = Go to Command */
+.launched .left{flex-basis:0;padding-left:0;padding-right:0;opacity:0}
+.launched .right{padding:0}
+.launched .right::before,.launched .live{opacity:0}
+.launched .win{max-width:100%;max-height:100%;border-radius:0;box-shadow:none}
+
+.dir-pill{position:fixed;right:16px;bottom:16px;z-index:30;background:rgba(27,35,41,.88);color:#fff;text-decoration:none;font-size:12px;line-height:16px;font-weight:700;padding:8px 12px;border-radius:var(--r-full);backdrop-filter:blur(8px);box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.dir-pill:hover{background:#1B2329}
+.dir-pill span{opacity:.65}
+
+@container (max-width:600px){
+  .trow{grid-template-columns:minmax(0,1.2fr) minmax(0,1.3fr) 64px}
+  .trow > :nth-child(3){display:none}
+  .sortby span.lb{display:none}
+}
+@container (max-width:520px){
+  .wtabs{display:none}
+  .dock{grid-template-columns:1fr}
+  .dsum{display:none}
+}
+@media (max-width:1180px){
+  .left{padding-left:var(--space-10);padding-right:var(--space-10)}
+  .right{padding:var(--space-6)}
+  .wsb{display:none}
+  .win{grid-template-columns:1fr}
+  h1{font-size:28px;line-height:36px}
+}
+@media (max-height:840px){
+  :root{--rowh:42px}
+  .lbody{padding:var(--space-5) 0}
+  .progress{margin-top:var(--space-5)}
+  .caps .cap{padding:var(--space-3) 0}
+  .feats{margin-top:var(--space-4)}
+  .lead{margin-top:var(--space-4)}
+  .where{margin-top:var(--space-4)}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+<div class="split" id="split">
+
+  <!-- ================= LEFT ================= -->
+  <section class="left" aria-label="KWIQ setup">
+    <div class="lhead">
+      <div class="kw">kw</div>
+      <div class="t">Command <span>· Set up KWIQ</span></div>
+      <button class="skip" id="skipBtn">Skip for now</button>
+    </div>
+    <div class="progress" id="progress"></div>
+    <div class="lbody" id="lbody" aria-live="polite"></div>
+    <div class="lfoot">
+      <span class="hint"><span class="k">←</span><span class="k">→</span> or <span class="k">Enter</span> to move</span>
+      <button class="btn btn-ghost" id="backBtn">Back</button>
+      <button class="btn btn-primary" id="nextBtn">Next</button>
+    </div>
+  </section>
+
+  <!-- ================= RIGHT: live preview ================= -->
+  <section class="right" aria-label="Live preview of Command">
+    <div class="live"><i></i>Live preview</div>
+    <div class="win" id="win">
+      <aside class="wsb">
+        <div class="kw">kw</div>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+        <span class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.6c2 .7 3.2 2.6 3.5 5.4"/></svg></span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l18-6v16L3 14z"/></svg></span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7"/></svg></span>
+      </aside>
+      <div class="wmain">
+        <div class="wtop">
+          <div class="wsearch region" id="rSearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Search or ask KWIQ<span class="k">⌘K</span><span class="pin p2" id="pin2">2</span></div>
+          <button class="wkwiq" id="wKwiq" tabindex="-1"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.1 6.2 6.4 2.3-6.4 2.3L12 19.5l-2.1-6.2L3.5 11l6.4-2.3z"/></svg>KWIQ<span class="pin p1" id="pin1">1</span></button>
+          <div class="wav">JR</div>
+          <div class="greet" id="greet"><b>Good morning, Jordan</b><p>3 leads are showing buying signals today. Priya Patel looks ready for a call.</p><div class="g-act"><span>See who to call</span><span>Draft follow-ups</span></div></div>
+        </div>
+        <div class="wbody" id="wbody">
+          <div class="whead">
+            <h3>Contacts</h3>
+            <div class="wtabs"><span id="tabToday">Today<span class="pin p3" id="pin3">3</span></span><span class="on">All</span><span>Sphere</span></div>
+            <div class="sortby" id="sortby"><span class="lb">Sorted by</span> <b id="sortLbl">Last updated</b></div>
+          </div>
+          <div class="ask region" id="rAsk">
+            <span class="sp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.1 6.2 6.4 2.3-6.4 2.3L12 19.5l-2.1-6.2L3.5 11l6.4-2.3z"/></svg></span>
+            <span class="q" id="askQ">Ask KWIQ about your contacts</span>
+            <span class="res" id="askRes">14 contacts</span>
+            <span class="offtag">Off</span>
+          </div>
+          <div class="tbl region" id="rTable">
+            <div class="trow thead"><span>Name</span><span>Latest signal</span><span>Stage</span><span class="sc-h"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.1 6.2 6.4 2.3-6.4 2.3L12 19.5l-2.1-6.2L3.5 11l6.4-2.3z"/></svg>Score</span></div>
+            <div class="rows" id="rows"></div>
+            <span class="offtag" style="top:6px">Scoring off</span>
+          </div>
+          <div class="dock">
+            <div class="dcard region" id="rDraft">
+              <h5><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg><span id="draftTitle">Suggested text · Priya Patel</span><span class="tt" id="toneTag">Warm</span></h5>
+              <div class="dtext" id="dtext"></div>
+              <div class="dfoot" id="dfoot"><span data-f="edit">Edit</span><span data-f="regen">Regenerate</span><span class="p" data-f="use">Use draft</span></div>
+              <span class="offtag">Off</span>
+            </div>
+            <div class="dcard dsum region" id="rSum">
+              <h5><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>Call summary</h5>
+              <div class="meta">Marcus Chen · 12 min · 9:15 AM</div>
+              <ul><li>Wants to list in spring</li><li>Prefers Saturday showings</li><li>Asked for Travis Heights comps</li></ul>
+              <span class="task"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Task: Send comps by Fri</span>
+              <span class="offtag">Off</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.1 6.2 6.4 2.3-6.4 2.3L12 19.5l-2.1-6.2L3.5 11l6.4-2.3z"/></svg><span>Welcome to Command. KWIQ is on.</span><button id="replay">Replay setup</button></div>
+
+<a class="dir-pill" href="index.html">02 · Split Preview · <span>All directions ↗</span></a>
+
+<script>
+(function(){
+  'use strict';
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $ = function(id){ return document.getElementById(id); };
+
+  var ICON = {
+    rank:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18h4V11H4zM10 18h4V6h-4zM16 18h4v-4h-4z"/></svg>',
+    draft:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>',
+    note:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>',
+    ask:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.2M12 16.5v.01"/></svg>',
+    right:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
+    shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>',
+    info:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.01"/></svg>',
+    eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+    search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>',
+    check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+    redo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>',
+    spark:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.1 6.2 6.4 2.3-6.4 2.3L12 19.5l-2.1-6.2L3.5 11l6.4-2.3z"/></svg>'
+  };
+
+  var CAPS = [
+    {key:'prioritize', name:'Prioritize', tag:'Know who to call first', ic:'rank', region:'rTable',
+     desc:'KWIQ ranks your leads each morning by signals like <b>listing views, saved searches and replies</b>.'},
+    {key:'draft', name:'Draft', tag:'Follow up in your voice', ic:'draft', region:'rDraft',
+     desc:'Texts and emails written from the lead’s activity, <b>ready for you to edit and send</b>.'},
+    {key:'summarize', name:'Summarize', tag:'Never retype call notes', ic:'note', region:'rSum',
+     desc:'Calls and meetings become <b>contact notes and next-step tasks</b>.'},
+    {key:'ask', name:'Ask', tag:'Ask your database anything', ic:'ask', region:'rAsk',
+     desc:'For example: <b>“Who in my sphere haven’t I talked to in 90 days?”</b>'}
+  ];
+
+  var TONES = {
+    warm:{label:'Warm', hint:'Friendly and personal', drafts:[
+      "Hi Priya! I saw you've been looking at a few homes in 78704. Two new 3-bedrooms hit the market this morning under $650K. Want me to set up a showing this weekend?",
+      "Hey Priya, hope your week's off to a great start! A couple of fresh 3-bedroom listings in 78704 just came up, both under $650K. I'd love to walk you through them this weekend if you're free."]},
+    direct:{label:'Direct', hint:'Short and to the point', drafts:[
+      "Hi Priya, two new 3 bd homes in 78704 listed this morning, both under $650K. Want to see them Saturday? I have 10am or 2pm open.",
+      "Priya, 2 new 78704 listings match your search: 3 bd, under $650K. I can show both this weekend. What time works?"]},
+    polished:{label:'Polished', hint:'Professional and refined', drafts:[
+      "Good morning, Priya. Two new three-bedroom homes in 78704 came to market today, each under $650K and in line with your saved search. I'd be glad to arrange a private showing this weekend at your convenience.",
+      "Hello Priya, I wanted to share two new listings in 78704 that match your criteria: three bedrooms, priced under $650K. If you'd like, I can schedule private showings for this weekend."]}
+  };
+
+  // Contacts: default order = "Last updated"
+  var CONTACTS = [
+    {id:'hb', ini:'HB', c:'#9F1239', name:'Hannah Brooks', sig:'Called 3 days ago', stage:'Nurture', cls:'', score:58},
+    {id:'lo', ini:'LO', c:'#2F6F4E', name:'Luis Ortega', sig:'Saved search · Zilker', stage:'New', cls:'new', score:66},
+    {id:'ta', ini:'TA', c:'#475569', name:'Tom Alvarez', sig:'No contact in 96 days', stage:'Sphere', cls:'', score:29, stale:true},
+    {id:'pp', ini:'PP', c:'#7A4FBF', name:'Priya Patel', sig:'Viewed 4 listings in 78704', stage:'Hot', cls:'hot', score:92},
+    {id:'mc', ini:'MC', c:'#1F7A8C', name:'Marcus Chen', sig:'Opened market report', stage:'Warm', cls:'warm', score:81},
+    {id:'ew', ini:'EW', c:'#B45309', name:'Erin Walsh', sig:'No contact in 104 days', stage:'Sphere', cls:'', score:37, stale:true},
+    {id:'dw', ini:'DW', c:'#C2410C', name:'Dana Whitfield', sig:'Replied to your text', stage:'Warm', cls:'warm', score:74}
+  ];
+
+  var state = {step:0, cap:0, features:{prioritize:true, draft:true, summarize:true, ask:true}, tone:'warm', variant:0, used:false, editing:false, userPicked:false};
+  var STEPS = 5, NAMES = ['Welcome','Capabilities','Personalize','Try it','Done'];
+  var lbody = $('lbody'), backBtn = $('backBtn'), nextBtn = $('nextBtn'), skipBtn = $('skipBtn');
+  var timers = {draft:null, ask:null, cap:null, misc:[]};
+
+  function clearAll(){
+    clearTimeout(timers.draft); clearTimeout(timers.ask); clearInterval(timers.cap);
+    timers.misc.forEach(clearTimeout); timers.misc = [];
+  }
+  function later(fn, ms){ var t = setTimeout(fn, reduce?0:ms); timers.misc.push(t); return t; }
+
+  /* ---------- Rows ---------- */
+  function buildRows(){
+    $('rows').innerHTML = CONTACTS.map(function(p){
+      return '<div class="row trow" data-id="'+p.id+'">'+
+        '<span class="nm"><span class="ini" style="background:'+p.c+'">'+p.ini+'</span><span>'+p.name+'</span></span>'+
+        '<span class="sig">'+p.sig+'</span>'+
+        '<span class="pill '+p.cls+'">'+p.stage+'</span>'+
+        '<span class="sc"><span class="bar"><i style="transform:scaleX('+(p.score/100)+')"></i></span><b>'+p.score+'</b></span>'+
+      '</div>';
+    }).join('');
+  }
+  function layoutRows(ranked){
+    var order = CONTACTS.slice();
+    if(ranked) order.sort(function(a,b){ return b.score-a.score; });
+    var h = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--rowh')) || 48;
+    order.forEach(function(p,i){
+      var el = document.querySelector('.row[data-id="'+p.id+'"]');
+      el.style.transform = 'translateY('+(i*h)+'px)';
+      el.style.zIndex = ranked ? (10 - i) : 1;
+    });
+    $('rTable').classList.toggle('noscore', !ranked);
+    $('sortLbl').textContent = ranked ? 'KWIQ priority' : 'Last updated';
+    $('sortby').classList.toggle('ai', ranked);
+  }
+  function rowClasses(fn){
+    var rows = document.querySelectorAll('.row');
+    for(var i=0;i<rows.length;i++){
+      var id = rows[i].getAttribute('data-id');
+      var p = CONTACTS.filter(function(c){return c.id===id;})[0];
+      var r = fn(p) || {};
+      rows[i].classList.toggle('hl', !!r.hl);
+      rows[i].classList.toggle('faded', !!r.faded);
+      rows[i].classList.toggle('sel', !!r.sel);
+    }
+  }
+
+  /* ---------- Streaming ---------- */
+  function stream(el, text, speed, key, done){
+    clearTimeout(timers[key]);
+    if(reduce){ el.textContent = text; if(done) done(); return; }
+    var i = 0;
+    el.innerHTML = '<span></span><span class="caret"></span>';
+    var t = el.firstChild;
+    (function tick(){
+      i = Math.min(text.length, i + 1 + (Math.random()<.35?1:0) + (Math.random()<.12?2:0));
+      t.textContent = text.slice(0,i);
+      if(i<text.length) timers[key] = setTimeout(tick, speed + Math.random()*speed);
+      else { var c = el.querySelector('.caret'); if(c) c.remove(); if(done) done(); }
+    })();
+  }
+
+  /* ---------- Preview state ---------- */
+  var REG = ['rSearch','rAsk','rTable','rDraft','rSum'];
+  var lastDraftKey = '';
+  function preview(){
+    var s = state.step, f = state.features, win = $('win');
+    REG.forEach(function(id){ $(id).classList.remove('dim','focus','off'); });
+    win.classList.toggle('try', s===3);
+    $('greet').classList.toggle('show', s===0);
+    $('wKwiq').classList.toggle('glow', s===0 || s===4);
+    ['pin1','pin2','pin3'].forEach(function(id,i){
+      var p = $(id); p.classList.remove('show');
+      if(s===4) later(function(){ p.classList.add('show'); }, 250 + i*220);
+    });
+
+    // ranking
+    var ranked = s>=1 && f.prioritize;
+    layoutRows(ranked);
+
+    // ask bar
+    var askActive = s===1 && CAPS[state.cap].key==='ask';
+    if(askActive) typeAsk(); else resetAsk();
+
+    // per-step emphasis
+    if(s===1){
+      var reg = CAPS[state.cap].region;
+      ['rAsk','rTable','rDraft','rSum'].forEach(function(id){ $(id).classList.add(id===reg?'focus':'dim'); });
+      if(CAPS[state.cap].key==='prioritize') rowClasses(function(p){ return {hl: p.id==='pp'}; });
+      else if(!askActive) rowClasses(function(){ return {}; });
+    } else if(s===2){
+      if(!f.prioritize) $('rTable').classList.add('off');
+      if(!f.draft) $('rDraft').classList.add('off');
+      if(!f.summarize) $('rSum').classList.add('off');
+      if(!f.ask) $('rAsk').classList.add('off');
+      rowClasses(function(){ return {}; });
+    } else if(s===3){
+      $('rAsk').classList.add('dim');
+      rowClasses(function(p){ return p.id==='pp' ? {sel:true} : {faded:true}; });
+    } else if(s===4){
+      ['rAsk','rTable','rDraft','rSum'].forEach(function(id){ $(id).classList.add('dim'); });
+      rowClasses(function(){ return {}; });
+    } else {
+      rowClasses(function(){ return {}; });
+    }
+
+    // draft card
+    $('toneTag').textContent = TONES[state.tone].label;
+    $('draftTitle').textContent = s===3 ? 'Text to Priya Patel' : 'Suggested text · Priya Patel';
+    if(s!==3){
+      var key = state.tone+':0';
+      if(key!==lastDraftKey || !$('dtext').textContent){
+        lastDraftKey = key;
+        if(s===2) stream($('dtext'), TONES[state.tone].drafts[0], 10, 'draft');
+        else { clearTimeout(timers.draft); $('dtext').textContent = TONES[state.tone].drafts[0]; }
+      }
+      $('dtext').removeAttribute('contenteditable');
+      setDockFoot();
+    }
+  }
+
+  function typeAsk(){
+    var q = $('askQ'), res = $('askRes');
+    var text = 'Who in my sphere haven’t I talked to in 90 days?';
+    q.classList.add('typed'); res.classList.remove('show');
+    rowClasses(function(){ return {}; });
+    stream(q, text, 22, 'ask', function(){
+      later(function(){
+        res.classList.add('show');
+        rowClasses(function(p){ return p.stale ? {hl:true} : {faded:true}; });
+      }, 250);
+    });
+  }
+  function resetAsk(){
+    clearTimeout(timers.ask);
+    var q = $('askQ'); q.classList.remove('typed'); q.textContent = 'Ask KWIQ about your contacts';
+    $('askRes').classList.remove('show');
+  }
+
+  function setDockFoot(){
+    var df = $('dfoot');
+    if(state.step===3 && state.used){
+      df.innerHTML = '<span class="sent-msg">'+ICON.check+'Added to Priya’s conversation</span>';
+    } else {
+      df.innerHTML = '<span data-f="edit"'+(state.editing?' class="flash"':'')+'>'+(state.editing?'Editing':'Edit')+'</span><span data-f="regen">Regenerate</span><span class="p" data-f="use">Use draft</span>';
+    }
+  }
+  function flashFoot(k){
+    var el = document.querySelector('#dfoot [data-f="'+k+'"]');
+    if(el){ el.classList.add('flash'); later(function(){ el.classList.remove('flash'); }, 700); }
+  }
+
+  /* ---------- Left panel ---------- */
+  function eyebrow(){
+    return '<div class="eyebrow"><span class="num">'+(state.step+1)+'/'+STEPS+'</span><span class="nm">'+NAMES[state.step]+'</span></div>';
+  }
+  function leftWelcome(){
+    return eyebrow()+'<h1 id="stepTitle">Meet KWIQ, your AI in Command</h1>'+
+      '<p class="lede">KWIQ works inside your contacts, so you know who to call, what to say and what happened last time. Setup takes about a minute.</p>'+
+      '<ul class="vals"><li><i>'+ICON.rank+'</i>Start each day with a ranked call list</li><li><i>'+ICON.draft+'</i>Send follow-ups that sound like you</li><li><i>'+ICON.shield+'</i>Stay in control. KWIQ drafts, you decide</li></ul>'+
+      '<div class="cta-row"><button class="btn btn-primary" data-go="next">Get started '+ICON.right+'</button><button class="btn btn-ghost" data-go="skip">Skip for now</button></div>';
+  }
+  function leftCaps(){
+    return eyebrow()+'<h1 id="stepTitle">Four ways KWIQ helps you every day</h1>'+
+      '<p class="lede">Select one to see it in your contacts.</p>'+
+      '<div class="caps">'+CAPS.map(function(c,i){
+        return '<button class="cap'+(i===state.cap?' on':'')+'" data-cap="'+i+'" aria-pressed="'+(i===state.cap)+'"><span class="n">0'+(i+1)+'</span><span><b>'+c.name+'</b><span class="tg">'+c.tag+'</span></span><span class="ar">'+ICON.right+'</span><span class="d">'+c.desc+'</span></button>';
+      }).join('')+'</div>';
+  }
+  function leftPersonalize(){
+    return eyebrow()+'<h1 id="stepTitle">Make KWIQ yours</h1>'+
+      '<p class="lede">Turn features on or off and pick how your drafts sound. Watch your contacts update.</p>'+
+      '<div class="feats">'+CAPS.map(function(c){
+        return '<button class="tog" role="switch" aria-checked="'+state.features[c.key]+'" data-feat="'+c.key+'"><span class="ic">'+ICON[c.ic]+'</span><span><b>'+c.name+'</b><span class="tg">'+c.tag+'</span></span><span class="sw"></span></button>';
+      }).join('')+'</div>'+
+      '<div class="lbl" id="toneLbl">Writing tone</div>'+
+      '<div class="tones" role="radiogroup" aria-labelledby="toneLbl">'+Object.keys(TONES).map(function(k){
+        return '<button role="radio" aria-checked="'+(state.tone===k)+'" data-tone="'+k+'"><b>'+TONES[k].label+'</b><small>'+TONES[k].hint+'</small></button>';
+      }).join('')+'</div>'+
+      '<div class="trust">'+ICON.shield+'<span>KWIQ only uses data in your Command account. Nothing sends without your OK.</span></div>';
+  }
+  function leftTry(){
+    return eyebrow()+'<h1 id="stepTitle">Priya is your top lead today</h1>'+
+      '<p class="lede">KWIQ spotted her activity overnight and drafted a text in your '+TONES[state.tone].label.toLowerCase()+' tone.'+(state.features.draft?'':' Draft is off, so this is a preview.')+'</p>'+
+      '<div class="lead"><span class="ini" style="background:#7A4FBF">PP</span><div><h4>Priya Patel</h4><div class="meta">Buyer · Zillow lead · Austin 78704</div></div>'+
+      '<div class="score">92<small>Score</small></div>'+
+      '<div class="sigs"><div>'+ICON.eye+'Viewed 4 listings in 78704 last night</div><div>'+ICON.search+'Saved search: 3 bd under $650K</div><div>'+ICON.rank+'Score 92 · #1 of 214 leads</div></div></div>'+
+      '<div id="tryActs">'+tryActs()+'</div>'+
+      '<p class="note">'+ICON.info+'KWIQ can make mistakes. Review before sending.</p>';
+  }
+  function tryActs(){
+    if(state.used) return '<div class="used">'+ICON.check+'Draft added to Priya’s conversation<button data-act="undo">Undo</button></div>';
+    return '<div class="acts"><button class="btn btn-secondary btn-sm" data-act="edit">'+(state.editing?'Save edits':'Edit')+'</button>'+
+      '<button class="btn btn-secondary btn-sm" data-act="regen">'+ICON.redo+'Regenerate</button>'+
+      '<button class="btn btn-primary btn-sm push" data-act="use">Use draft</button></div>';
+  }
+  function leftDone(){
+    return eyebrow()+'<h1 id="stepTitle">You’re all set</h1>'+
+      '<p class="lede">KWIQ is ready across Command. Here’s where to find it.</p>'+
+      '<ul class="where">'+
+        '<li data-pin="pin1"><span class="pn">1</span><span><b>KWIQ button</b> <span>in the top bar</span></span></li>'+
+        '<li data-pin="pin2"><span class="pn">2</span><span><b>Ask from search</b> <span>anywhere</span></span><span class="k">⌘K</span></li>'+
+        '<li data-pin="pin3"><span class="pn">3</span><span><b>Today view</b> <span>for your ranked call list</span></span></li>'+
+      '</ul>'+
+      '<div class="cta-row"><button class="btn btn-primary" data-go="next">Go to Command '+ICON.right+'</button><button class="link" data-go="restart">Restart</button></div>';
+  }
+
+  function render(dir){
+    clearAll();
+    state.editing = false;
+    var s = state.step;
+    lbody.innerHTML = '<div class="enter'+(dir<0?' back':'')+'">'+[leftWelcome,leftCaps,leftPersonalize,leftTry,leftDone][s]()+'</div>';
+    var p = '';
+    for(var i=0;i<STEPS;i++) p += '<button aria-label="Step '+(i+1)+': '+NAMES[i]+'" data-step="'+i+'" class="'+(i===s?'on':(i<s?'done':''))+'"'+(i===s?' aria-current="step"':'')+'></button>';
+    $('progress').innerHTML = p;
+    backBtn.disabled = s===0;
+    backBtn.style.visibility = s===0 ? 'hidden' : 'visible';
+    nextBtn.hidden = (s===0 || s===4);
+    nextBtn.innerHTML = ['Get started','Personalize KWIQ','Try it','Finish setup','Go to Command'][s]+' '+ICON.right;
+    skipBtn.style.visibility = s===4 ? 'hidden' : 'visible';
+    preview();
+    if(s===1 && !state.userPicked && !reduce) timers.cap = setInterval(function(){ setCap((state.cap+1)%4, false); }, 4200);
+    if(s===3) runTry();
+  }
+
+  function setCap(i, user){
+    if(user){ state.userPicked = true; clearInterval(timers.cap); }
+    if(i===state.cap) return;
+    state.cap = i;
+    var b = lbody.querySelectorAll('.cap');
+    for(var j=0;j<b.length;j++){ b[j].classList.toggle('on', j===i); b[j].setAttribute('aria-pressed', j===i); }
+    preview();
+  }
+
+  function runTry(){
+    var tx = $('dtext');
+    tx.removeAttribute('contenteditable');
+    tx.innerHTML = '<span class="thinking"><i></i><i></i><i></i>&nbsp;Drafting from Priya’s activity</span>';
+    setDockFoot();
+    lockActs(true);
+    lastDraftKey = '';
+    later(function(){
+      stream(tx, TONES[state.tone].drafts[state.variant], 18, 'draft', function(){ lockActs(false); });
+    }, 1000);
+  }
+  function lockActs(v){
+    var b = lbody.querySelectorAll('[data-act]');
+    for(var i=0;i<b.length;i++) b[i].disabled = v;
+  }
+
+  function go(to){
+    if(to<0 || to>=STEPS || to===state.step) return;
+    var dir = to>state.step ? 1 : -1;
+    state.step = to; render(dir);
+  }
+  function next(){ if(state.step<STEPS-1) go(state.step+1); else launch(); }
+  function back(){ if(state.step>0) go(state.step-1); }
+  function restart(){
+    state.step = 0; state.cap = 0; state.used = false; state.variant = 0; state.userPicked = false;
+    render(-1);
+  }
+  function launch(){
+    clearAll();
+    $('split').classList.add('launched');
+    REG.forEach(function(id){ $(id).classList.remove('dim','focus','off'); });
+    ['pin1','pin2','pin3'].forEach(function(id){ $(id).classList.remove('show'); });
+    $('win').classList.remove('try');
+    rowClasses(function(){ return {}; });
+    later(function(){ $('toast').classList.add('show'); }, 700);
+  }
+  function unlaunch(){
+    $('toast').classList.remove('show');
+    $('split').classList.remove('launched');
+    restart();
+  }
+
+  /* ---------- Events ---------- */
+  nextBtn.addEventListener('click', next);
+  backBtn.addEventListener('click', back);
+  skipBtn.addEventListener('click', function(){ go(4); });
+  $('replay').addEventListener('click', unlaunch);
+  $('progress').addEventListener('click', function(e){ var b = e.target.closest('[data-step]'); if(b) go(+b.getAttribute('data-step')); });
+
+  lbody.addEventListener('click', function(e){
+    var g = e.target.closest('[data-go]');
+    if(g){ var a = g.getAttribute('data-go'); if(a==='next') next(); else if(a==='skip') go(4); else if(a==='restart') restart(); return; }
+    var c = e.target.closest('[data-cap]');
+    if(c){ setCap(+c.getAttribute('data-cap'), true); return; }
+    var f = e.target.closest('[data-feat]');
+    if(f){ var k = f.getAttribute('data-feat'); state.features[k] = !state.features[k]; f.setAttribute('aria-checked', state.features[k]); preview(); return; }
+    var t = e.target.closest('[data-tone]');
+    if(t){
+      state.tone = t.getAttribute('data-tone'); state.variant = 0;
+      var all = lbody.querySelectorAll('[data-tone]'); for(var i=0;i<all.length;i++) all[i].setAttribute('aria-checked', all[i]===t);
+      preview(); return;
+    }
+    var act = e.target.closest('[data-act]');
+    if(act && !act.disabled){
+      var x = act.getAttribute('data-act'), tx = $('dtext');
+      if(x==='edit'){
+        state.editing = !state.editing;
+        if(state.editing){ tx.setAttribute('contenteditable','true'); tx.focus(); caretEnd(tx); }
+        else tx.removeAttribute('contenteditable');
+        $('tryActs').innerHTML = tryActs(); setDockFoot();
+      } else if(x==='regen'){
+        state.variant = (state.variant+1)%2; state.editing = false; tx.removeAttribute('contenteditable');
+        $('tryActs').innerHTML = tryActs(); setDockFoot(); flashFoot('regen'); lockActs(true);
+        stream(tx, TONES[state.tone].drafts[state.variant], 14, 'draft', function(){ lockActs(false); });
+      } else if(x==='use'){
+        state.used = true; state.editing = false; tx.removeAttribute('contenteditable');
+        $('tryActs').innerHTML = tryActs(); setDockFoot();
+      } else if(x==='undo'){
+        state.used = false; $('tryActs').innerHTML = tryActs(); setDockFoot();
+      }
+    }
+  });
+  lbody.addEventListener('mouseover', function(e){
+    var c = e.target.closest('[data-cap]');
+    if(c) setCap(+c.getAttribute('data-cap'), true);
+    var w = e.target.closest('[data-pin]');
+    if(w){ var p = $(w.getAttribute('data-pin')); p.style.transform = 'scale(1.25)'; }
+  });
+  lbody.addEventListener('mouseout', function(e){
+    var w = e.target.closest('[data-pin]');
+    if(w){ $(w.getAttribute('data-pin')).style.transform = ''; }
+  });
+
+  function caretEnd(el){
+    var r = document.createRange(); r.selectNodeContents(el); r.collapse(false);
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+
+  document.addEventListener('keydown', function(e){
+    if($('split').classList.contains('launched')) return;
+    var t = e.target;
+    if(t && (t.isContentEditable || /INPUT|TEXTAREA|SELECT/.test(t.tagName))) return;
+    if(e.key==='ArrowRight'){ e.preventDefault(); next(); }
+    else if(e.key==='ArrowLeft'){ e.preventDefault(); back(); }
+    else if(e.key==='Enter'){
+      if(t && t.tagName==='BUTTON' && t.closest('.lfoot, .lhead, .progress, [data-act], [data-go], .toast')) return;
+      e.preventDefault(); next();
+    }
+  });
+  window.addEventListener('resize', function(){ layoutRows(state.step>=1 && state.features.prioritize); });
+
+  buildRows();
+  $('rows').classList.add('instant');
+  layoutRows(false);
+  render(1);
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ $('rows').classList.remove('instant'); }); });
+})();
+</script>
+</body>
+</html>

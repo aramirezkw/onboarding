@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>10 · Bento · KWIQ onboarding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --base:#FAFAF7; --ink:#111; --ink-2:#4A4A46; --ink-3:#8A8A84; --line:rgba(17,17,17,.1);
+  --sage:#DDE8D5; --butter:#F6E7B0; --lilac:#E4DDF5; --sky:#D6E6F2; --stone:#EFEDE6; --white:#fff;
+  --sage-d:#5C7A4C; --butter-d:#8A6A12; --lilac-d:#5E4C9A; --sky-d:#3A6A8E;
+  --ease:cubic-bezier(.65,0,.35,1); --out:cubic-bezier(.22,1,.36,1);
+  --mono:'DM Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--base);color:var(--ink);overflow:hidden;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+
+.app{height:100vh;display:grid;grid-template-rows:64px 1fr 60px;padding:0 20px}
+
+/* header */
+.top{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:16px;letter-spacing:-.01em}
+.logo{display:grid;grid-template-columns:repeat(2,9px);gap:2px}
+.logo i{width:9px;height:9px;border-radius:2.5px}
+.brand .sub{font-family:var(--mono);font-size:11px;font-weight:400;color:var(--ink-3);letter-spacing:.06em;text-transform:uppercase}
+.prog{display:flex;align-items:center;gap:14px}
+.pips{display:flex;gap:5px}
+.pip{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--line);background:transparent;transition:background .45s var(--out),border-color .45s,transform .45s var(--out);position:relative;overflow:hidden}
+.pip.on{border-color:var(--ink)}
+.pip.cur{transform:scale(1.12)}
+.pip[data-p="0"].on{background:#fff}
+.pip[data-p="1"].on{background:conic-gradient(var(--sage) 0 25%,var(--butter) 0 50%,var(--sky) 0 75%,var(--lilac) 0)}
+.pip[data-p="2"].on{background:var(--stone)}
+.pip[data-p="3"].on{background:var(--butter)}
+.pip[data-p="4"].on{background:var(--ink)}
+.prog-label{font-family:var(--mono);font-size:12px;color:var(--ink-2);letter-spacing:.04em;min-width:150px}
+.prog-label b{color:var(--ink);font-weight:500}
+.skip{font-weight:600;font-size:14px;padding:8px 14px;border-radius:999px;transition:background .2s}
+.skip:hover{background:rgba(17,17,17,.06)}
+.skip.hide{visibility:hidden}
+
+/* grid */
+.bento{
+  display:grid;gap:12px;min-height:0;
+  grid-template-areas:"wel wel pri dra" "wel wel sum ask" "per try try don";
+  grid-template-columns:1.25fr 1.25fr 1fr 1fr;
+  grid-template-rows:1fr 1fr .42fr;
+  transition:grid-template-columns .75s var(--ease),grid-template-rows .75s var(--ease);
+}
+.bento.s1{grid-template-columns:1.25fr 1.25fr 1fr 1fr;grid-template-rows:1fr 1fr .42fr}
+.bento.s2{grid-template-columns:.55fr .55fr 1.45fr 1.45fr;grid-template-rows:1fr 1fr .34fr}
+.bento.s3{grid-template-columns:2.3fr .55fr .55fr .6fr;grid-template-rows:.36fr .36fr 2fr}
+.bento.s4{grid-template-columns:.5fr 1.35fr 1.35fr .55fr;grid-template-rows:.36fr .36fr 2fr}
+.bento.s5{grid-template-columns:.5fr .5fr .55fr 2.2fr;grid-template-rows:.36fr .36fr 2fr}
+
+.tile{
+  position:relative;border-radius:18px;min-width:0;min-height:0;overflow:hidden;
+  container-type:size;cursor:pointer;
+  background:var(--c);
+  opacity:.5;filter:grayscale(.85);
+  box-shadow:inset 0 0 0 1px var(--line);
+  transition:opacity .5s var(--out),filter .6s var(--out),box-shadow .35s,transform .35s var(--out);
+}
+.tile:hover:not(.active){opacity:.8}
+.tile.lit{opacity:.72;filter:none}
+.tile.active{opacity:1;filter:none;cursor:default;box-shadow:inset 0 0 0 2px var(--ink),0 18px 40px -26px rgba(17,17,17,.45)}
+.t-wel{grid-area:wel;--c:#fff}
+.t-pri{grid-area:pri;--c:var(--sage);--d:var(--sage-d)}
+.t-dra{grid-area:dra;--c:var(--butter);--d:var(--butter-d)}
+.t-sum{grid-area:sum;--c:var(--lilac);--d:var(--lilac-d)}
+.t-ask{grid-area:ask;--c:var(--sky);--d:var(--sky-d)}
+.t-per{grid-area:per;--c:var(--stone)}
+.t-try{grid-area:try;--c:#fff}
+.t-don{grid-area:don;--c:var(--ink);color:#fff}
+.t-don{box-shadow:none}
+.t-don.active{box-shadow:0 0 0 2px var(--base),0 0 0 4px var(--ink),0 18px 40px -20px rgba(17,17,17,.6)}
+/* staggered light-up for capability tiles */
+.t-pri{transition-delay:0s}
+.bento.s2 .t-dra{transition-delay:.09s}
+.bento.s2 .t-sum{transition-delay:.18s}
+.bento.s2 .t-ask{transition-delay:.27s}
+
+.layer{position:absolute;inset:0;display:flex;flex-direction:column;transition:opacity .25s var(--out),visibility 0s .25s}
+.compact{padding:14px 16px;justify-content:space-between;opacity:1}
+.full{padding:26px 28px;opacity:0;visibility:hidden;pointer-events:none}
+.tile.active .compact{opacity:0;visibility:hidden}
+.tile.active .full{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .45s var(--out) .38s,visibility 0s 0s}
+
+/* compact */
+.c-top{display:flex;justify-content:space-between;align-items:center;gap:8px;color:var(--ink-2)}
+.t-don .c-top{color:rgba(255,255,255,.6)}
+.c-top .mono{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.c-check{width:16px;height:16px;border-radius:50%;background:var(--ink);color:#fff;display:none;place-items:center;flex:none}
+.t-don .c-check{background:#fff;color:var(--ink)}
+.c-check svg{width:10px;height:10px}
+.tile.done .c-check{display:grid}
+.c-title{font-weight:600;font-size:15px;line-height:1.2;letter-spacing:-.01em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.c-desc{display:none;font-size:13px;line-height:1.45;color:var(--ink-2);margin-top:6px}
+.c-meta{display:none;margin-top:6px;color:var(--ink-2)}
+@container (min-height:150px) and (min-width:200px){
+  .c-title{font-size:21px;font-weight:700;letter-spacing:-.02em}
+  .c-desc{display:block}
+  .c-meta{display:block}
+}
+@container (max-height:70px){ .c-top{display:none} .compact{justify-content:center} }
+.off-badge{display:none;font-family:var(--mono);font-size:10px;letter-spacing:.06em;padding:2px 6px;border-radius:5px;background:var(--ink);color:#fff}
+.tile.off .off-badge{display:inline-block}
+.tile.off .c-title{text-decoration:line-through;text-decoration-thickness:1.5px}
+
+/* full: shared */
+.f-top{display:flex;justify-content:space-between;align-items:center;color:var(--ink-2);margin-bottom:14px;gap:12px}
+.f-title{font-weight:700;font-size:26px;line-height:1.15;letter-spacing:-.025em}
+.f-body{font-size:14px;line-height:1.5;color:var(--ink-2);margin-top:6px;max-width:440px}
+.btn{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px;border-radius:999px;font-weight:600;font-size:15px;transition:transform .2s var(--out),background .2s,opacity .2s;white-space:nowrap}
+.btn:active{transform:scale(.97)}
+.btn-ink{background:var(--ink);color:#fff}
+.btn-ink:hover{background:#2a2a2a}
+.btn-line{box-shadow:inset 0 0 0 1.5px var(--ink)}
+.btn-line:hover{background:rgba(17,17,17,.05)}
+.btn-text{padding:0 8px;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(17,17,17,.3)}
+.btn-sm{height:36px;padding:0 14px;font-size:13px}
+.btn svg{width:15px;height:15px}
+
+/* welcome */
+.t-wel .full{justify-content:space-between}
+.wel-h{font-weight:700;font-size:clamp(40px,4.6vw,68px);line-height:1.02;letter-spacing:-.04em;margin-top:8px}
+.wel-h span{color:var(--ink-3)}
+.wel-p{font-size:17px;line-height:1.5;color:var(--ink-2);max-width:460px;margin-top:16px}
+.wel-actions{display:flex;gap:10px;align-items:center;margin-top:26px}
+.wel-foot{display:flex;justify-content:space-between;align-items:flex-end;color:var(--ink-3);gap:16px}
+.legend{display:flex;gap:6px;align-items:center}
+.legend i{width:14px;height:14px;border-radius:4px;box-shadow:inset 0 0 0 1px var(--line)}
+
+/* capability demos */
+.demo{margin-top:auto;border-radius:12px;background:rgba(255,255,255,.62);padding:12px;min-height:0;flex:1;max-height:150px;position:relative;overflow:hidden;margin-top:14px}
+.rank{position:relative;height:100%}
+.rrow{position:absolute;left:0;right:0;height:30px;display:flex;align-items:center;gap:10px;padding:0 10px;border-radius:8px;background:#fff;font-size:13px;font-weight:500}
+.rrow .sc{margin-left:auto;font-family:var(--mono);font-size:12px}
+.rrow .sg{color:var(--ink-3);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rrow.p{box-shadow:inset 0 0 0 1.5px var(--ink);font-weight:700}
+.rrow.p .sc{background:var(--ink);color:#fff;padding:2px 6px;border-radius:5px}
+.rr0{top:0}.rr1{top:36px}.rr2{top:72px}
+.active .rrow.p{animation:up .9s .7s var(--out) both}
+.active .rrow.rr0,.active .rrow.rr1{animation:down .9s .75s var(--out) both}
+@keyframes up{to{transform:translateY(-72px)}}
+@keyframes down{to{transform:translateY(36px)}}
+
+.bub{background:var(--ink);color:#fff;border-radius:14px 14px 4px 14px;padding:10px 12px;font-size:13px;line-height:1.45;margin-left:auto;max-width:92%;position:relative;min-height:38px}
+.bub .tx{opacity:0}
+.bub .dt{position:absolute;left:12px;top:15px;display:flex;gap:4px}
+.bub .dt i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.7);animation:bl 1s infinite}
+.bub .dt i:nth-child(2){animation-delay:.15s}.bub .dt i:nth-child(3){animation-delay:.3s}
+@keyframes bl{50%{opacity:.25}}
+.active .bub .dt{animation:fo .2s 1.2s forwards}
+.active .bub .tx{animation:fi .5s 1.35s var(--out) forwards}
+@keyframes fo{to{opacity:0}}
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.d-src{display:flex;justify-content:space-between;color:var(--ink-3);margin-bottom:8px}
+
+.sumd{display:grid;grid-template-columns:auto 1fr;gap:12px;height:100%;align-items:center}
+.wave{display:flex;gap:2px;align-items:center;height:40px;width:70px}
+.wave i{flex:1;background:var(--lilac-d);border-radius:2px;height:30%}
+.active .wave i{animation:wv .9s ease-in-out infinite}
+@keyframes wv{50%{height:100%}}
+.nl{display:flex;flex-direction:column;gap:5px}
+.nl div{font-size:12.5px;background:#fff;border-radius:7px;padding:5px 9px;display:flex;gap:7px;align-items:center;opacity:0}
+.nl .bx{width:11px;height:11px;border:1.5px solid var(--ink);border-radius:3px;flex:none}
+.active .nl div{animation:fi .45s var(--out) forwards}
+.active .nl div:nth-child(1){animation-delay:.6s}.active .nl div:nth-child(2){animation-delay:.95s}.active .nl div:nth-child(3){animation-delay:1.3s}
+
+.q{display:flex;align-items:center;gap:8px;background:#fff;border-radius:8px;height:34px;padding:0 10px;font-size:13px}
+.q .k{font-family:var(--mono);font-size:11px;color:var(--ink-3);flex:none}
+.q .qt{overflow:hidden;white-space:nowrap;flex:1;min-width:0}
+.q .qt span{display:inline-block;max-width:0;overflow:hidden;white-space:nowrap;vertical-align:bottom}
+.active .q .qt span{animation:ty 1.5s .4s steps(46) forwards}
+@keyframes ty{to{max-width:100%}}
+.ans{display:flex;align-items:baseline;gap:10px;margin-top:10px;opacity:0}
+.active .ans{animation:fi .5s 2s var(--out) forwards}
+.ans .n{font-family:var(--mono);font-size:30px;letter-spacing:-.04em}
+.ans p{font-size:12.5px;color:var(--ink-2);line-height:1.4}
+
+/* personalize */
+.per-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:22px;flex:1;min-height:0;margin-top:18px}
+.col-label{color:var(--ink-3);margin-bottom:10px}
+.feat{display:flex;align-items:center;gap:12px;width:100%;height:50px;padding:0 12px;border-radius:12px;background:#fff;margin-bottom:8px;text-align:left;transition:background .25s,opacity .25s;box-shadow:inset 0 0 0 1px var(--line)}
+.feat .sw8{width:18px;height:18px;border-radius:5px;background:var(--sc);box-shadow:inset 0 0 0 1px var(--line);flex:none;transition:filter .25s}
+.feat .fn{flex:1;font-weight:600;font-size:15px}
+.feat .st{font-family:var(--mono);font-size:11px;color:var(--ink-3);width:24px;text-align:right}
+.tg{width:38px;height:22px;border-radius:999px;background:#CFCFC8;position:relative;flex:none;transition:background .25s}
+.tg::after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform .3s var(--out)}
+.feat[aria-checked="true"] .tg{background:var(--ink)}
+.feat[aria-checked="true"] .tg::after{transform:translateX(16px)}
+.feat[aria-checked="false"]{background:transparent}
+.feat[aria-checked="false"] .sw8{filter:grayscale(1);opacity:.5}
+.feat[aria-checked="false"] .fn{color:var(--ink-3)}
+.tone{display:block;width:100%;text-align:left;padding:12px 14px;border-radius:12px;background:#fff;box-shadow:inset 0 0 0 1px var(--line);margin-bottom:8px;transition:box-shadow .2s,background .2s}
+.tone .tn{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:15px}
+.tone .tn .rd{width:16px;height:16px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--ink-3);transition:box-shadow .2s}
+.tone .ts{font-size:12.5px;color:var(--ink-2);margin-top:3px;line-height:1.4;display:block}
+.tone[aria-checked="true"]{box-shadow:inset 0 0 0 2px var(--ink)}
+.tone[aria-checked="true"] .rd{box-shadow:inset 0 0 0 5px var(--ink)}
+.trust{display:flex;gap:10px;align-items:center;font-size:13px;color:var(--ink-2);padding-top:14px;border-top:1px solid var(--line);margin-top:auto}
+.trust svg{width:16px;height:16px;flex:none}
+
+/* try */
+.try-grid{display:grid;grid-template-columns:.9fr 1.25fr;gap:16px;flex:1;min-height:0;margin-top:16px}
+.lead{border-radius:14px;background:var(--sage);padding:18px;display:flex;flex-direction:column;transition:opacity .5s var(--out),transform .5s var(--out)}
+.lead.pending{opacity:0;transform:translateY(8px)}
+.lead-h{display:flex;align-items:center;gap:12px}
+.av{width:44px;height:44px;border-radius:12px;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:700;font-size:15px;flex:none}
+.lead-h b{font-size:18px;letter-spacing:-.01em;display:block}
+.lead-h span{color:var(--ink-2)}
+.score{margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;padding-top:16px}
+.score .big{font-family:var(--mono);font-size:64px;line-height:.9;letter-spacing:-.06em}
+.score .lbl{color:var(--ink-2);text-align:right}
+.meter{height:6px;border-radius:3px;background:rgba(17,17,17,.12);margin-top:12px;overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--ink);border-radius:3px;transition:width 1.2s var(--out) .3s}
+.lead:not(.pending) .meter i{width:92%}
+.sigs{display:flex;flex-direction:column;gap:6px;margin-top:16px}
+.sig{display:flex;gap:10px;font-size:13.5px;line-height:1.35;background:rgba(255,255,255,.6);padding:8px 10px;border-radius:9px}
+.sig .mono{color:var(--sage-d);flex:none;padding-top:2px}
+.draft{border-radius:14px;background:var(--butter);padding:18px;display:flex;flex-direction:column;min-height:0;transition:opacity .4s}
+.draft.pending{opacity:.35}
+.draft-h{display:flex;justify-content:space-between;color:var(--ink-2);margin-bottom:10px}
+.draft-h .tt{background:var(--ink);color:#fff;padding:2px 8px;border-radius:5px}
+.draft-text{flex:1;min-height:0;overflow:auto;font-size:17px;line-height:1.55;font-weight:500;letter-spacing:-.005em;outline:none;border-radius:10px;padding:4px 6px;margin:0 -6px;transition:background .2s,box-shadow .2s}
+.draft-text.typing::after{content:"";display:inline-block;width:8px;height:1.05em;background:var(--ink);vertical-align:-2px;margin-left:2px;animation:cr .8s steps(1) infinite}
+@keyframes cr{50%{opacity:0}}
+.draft-text[contenteditable="true"]{background:#fff;box-shadow:inset 0 0 0 1.5px var(--ink)}
+.draft-actions{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.draft-actions .sp{flex:1}
+.used{font-family:var(--mono);font-size:11px;letter-spacing:.04em;opacity:0;transition:opacity .3s}
+.used.show{opacity:1}
+.foot{color:var(--ink-3);margin-top:12px;font-size:12.5px}
+.status{display:inline-flex;align-items:center;gap:8px}
+.blk{width:7px;height:12px;background:var(--ink);animation:cr .8s steps(1) infinite}
+.status.idle .blk{display:none}
+
+/* done */
+.t-don .f-top{color:rgba(255,255,255,.55)}
+.done-h{font-weight:700;font-size:clamp(36px,3.6vw,48px);letter-spacing:-.035em;line-height:1.02}
+.done-p{color:rgba(255,255,255,.7);font-size:15px;line-height:1.5;margin-top:10px;max-width:440px}
+.finds{margin-top:22px;display:flex;flex-direction:column;gap:8px}
+.find{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.07);opacity:0}
+.active .find{animation:fi .5s var(--out) forwards}
+.active .find:nth-child(1){animation-delay:.55s}.active .find:nth-child(2){animation-delay:.65s}.active .find:nth-child(3){animation-delay:.75s}
+.find .vis{width:52px;height:34px;border-radius:8px;display:grid;place-items:center;flex:none;font-family:var(--mono);font-size:13px;color:var(--ink)}
+.find b{font-weight:600;font-size:15px;display:block}
+.find span{font-size:13px;color:rgba(255,255,255,.6)}
+.done-actions{display:flex;gap:10px;align-items:center;margin-top:auto;padding-top:18px}
+.btn-white{background:#fff;color:var(--ink)}
+.btn-white:hover{background:#eee}
+.t-don .btn-text{color:#fff;text-decoration-color:rgba(255,255,255,.35)}
+
+/* footer */
+.bottom{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.hints{display:flex;gap:18px;color:var(--ink-3);margin-left:280px}
+.hints kbd{font-family:var(--mono);font-size:11px;padding:2px 6px;border-radius:5px;box-shadow:inset 0 0 0 1px var(--line);background:#fff;color:var(--ink-2);margin-right:6px}
+.nav{display:flex;gap:8px}
+.nav .btn{height:40px}
+.nav .btn:disabled{opacity:.3;pointer-events:none}
+.bottom.muted .nav{visibility:hidden}
+
+.corner{position:fixed;left:20px;bottom:14px;z-index:20;display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px 0 6px;border-radius:999px;background:#fff;box-shadow:inset 0 0 0 1px var(--line);text-decoration:none;color:var(--ink);font-size:12.5px;font-weight:600;transition:box-shadow .2s}
+.corner:hover{box-shadow:inset 0 0 0 1.5px var(--ink)}
+.corner .n{font-family:var(--mono);font-size:11px;background:var(--ink);color:#fff;border-radius:999px;padding:3px 7px}
+.corner .s{color:var(--ink-3)}
+
+.toast{position:fixed;left:50%;top:16px;transform:translate(-50%,-12px);opacity:0;background:var(--ink);color:#fff;font-family:var(--mono);font-size:12px;letter-spacing:.04em;padding:10px 14px;border-radius:8px;transition:all .35s var(--out);pointer-events:none;z-index:30}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (max-height:840px){
+  .full{padding:22px 24px}
+  .f-title{font-size:23px}
+  .wel-actions{margin-top:20px}
+  .score .big{font-size:52px}
+  .finds{margin-top:16px}
+  .find{padding:9px 12px}
+  .feat{height:44px}
+  .tone{padding:9px 12px}
+}
+@media (max-width:1180px){ .hints{display:none} .prog-label{min-width:0} }
+body.init *,body.init *::before,body.init *::after{transition:none!important}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.001ms!important;transition-delay:0s!important}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-arr" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+  <symbol id="i-arl" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M19 12H5m6-6-6 6 6 6"/></symbol>
+  <symbol id="i-chk" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4ZM13.5 6.5l4 4"/></symbol>
+  <symbol id="i-re" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M20 11a8 8 0 0 0-14.3-4.2L4 9M4 4v5h5M4 13a8 8 0 0 0 14.3 4.2L20 15m0 5v-5h-5"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.5c.5 4.6 2.4 7.6 9.5 9.5-7.1 1.9-9 4.9-9.5 9.5-.5-4.6-2.4-7.6-9.5-9.5 7.1-1.9 9-4.9 9.5-9.5Z"/></symbol>
+</defs></svg>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <span class="logo" aria-hidden="true"><i style="background:var(--sage)"></i><i style="background:var(--butter)"></i><i style="background:var(--lilac)"></i><i style="background:var(--sky)"></i></span>
+      KWIQ <span class="sub">Your AI in Command</span>
+    </div>
+    <div class="prog">
+      <div class="pips" id="pips" aria-hidden="true">
+        <span class="pip" data-p="0"></span><span class="pip" data-p="1"></span><span class="pip" data-p="2"></span><span class="pip" data-p="3"></span><span class="pip" data-p="4"></span>
+      </div>
+      <span class="prog-label" id="progLabel" aria-live="polite"></span>
+    </div>
+    <button class="skip" type="button" id="skipBtn">Skip for now</button>
+  </header>
+
+  <main class="bento s1" id="bento">
+    <!-- Welcome -->
+    <section class="tile t-wel" data-step="1" aria-label="Welcome">
+      <div class="layer compact"><div class="c-top"><span class="mono">01 · Welcome</span><span class="c-check"><svg><use href="#i-chk"/></svg></span></div><div><div class="c-title">Meet KWIQ</div><div class="c-desc">Your AI in Command.</div></div></div>
+      <div class="layer full">
+        <div>
+          <div class="f-top"><span class="mono">01 · Welcome</span><span class="mono">Jordan Reyes · Austin Southwest</span></div>
+          <h1 class="wel-h">Meet KWIQ.<br><span>Your AI in Command.</span></h1>
+          <p class="wel-p">KWIQ ranks your leads, drafts follow-ups in your voice and turns calls into notes. You stay in control of every send.</p>
+          <div class="wel-actions">
+            <button class="btn btn-ink" type="button" data-act="next">Get started <svg><use href="#i-arr"/></svg></button>
+            <button class="btn btn-text" type="button" data-act="skip">Skip for now</button>
+          </div>
+        </div>
+        <div class="wel-foot">
+          <span class="mono">~2 min · 5 steps</span>
+          <span class="legend mono"><i style="background:var(--sage)"></i><i style="background:var(--butter)"></i><i style="background:var(--lilac)"></i><i style="background:var(--sky)"></i>&nbsp;4 capabilities →</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Prioritize -->
+    <section class="tile t-pri" data-step="2" data-f="prioritize" aria-label="Prioritize">
+      <div class="layer compact"><div class="c-top"><span class="mono">02.1 · Prioritize</span><span class="off-badge">Off</span><span class="c-check"><svg><use href="#i-chk"/></svg></span></div><div><div class="c-title">Know who to call first</div><div class="c-desc">Leads ranked each morning by real signals.</div></div></div>
+      <div class="layer full">
+        <div class="f-top"><span class="mono">02.1 · Prioritize</span><span class="mono">214 leads ranked</span></div>
+        <div class="f-title">Know who to call first</div>
+        <p class="f-body">KWIQ ranks your leads each morning by signals like listing views, saved searches and replies.</p>
+        <div class="demo"><div class="rank">
+          <div class="rrow rr0">Marcus Lee <span class="sg">Replied 2d ago</span><span class="sc">71</span></div>
+          <div class="rrow rr1">Dana Kim <span class="sg">Opened email</span><span class="sc">64</span></div>
+          <div class="rrow rr2 p">Priya Patel <span class="sg">4 views in 78704</span><span class="sc">92</span></div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- Draft -->
+    <section class="tile t-dra" data-step="2" data-f="draft" aria-label="Draft">
+      <div class="layer compact"><div class="c-top"><span class="mono">02.2 · Draft</span><span class="off-badge">Off</span><span class="c-check"><svg><use href="#i-chk"/></svg></span></div><div><div class="c-title">Follow up in your voice</div><div class="c-desc">Texts and emails, ready to edit and send.</div></div></div>
+      <div class="layer full">
+        <div class="f-top"><span class="mono">02.2 · Draft</span><span class="mono">Text · Email</span></div>
+        <div class="f-title">Follow up in your voice</div>
+        <p class="f-body">Texts and emails written from the lead's activity, ready for you to edit and send.</p>
+        <div class="demo">
+          <div class="d-src mono"><span>From: saved search</span><span>Draft</span></div>
+          <div class="bub"><span class="dt"><i></i><i></i><i></i></span><span class="tx">Hi Priya! Two new 3-bedrooms in 78704 just listed under $650K. Want to see them this weekend?</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Summarize -->
+    <section class="tile t-sum" data-step="2" data-f="summarize" aria-label="Summarize">
+      <div class="layer compact"><div class="c-top"><span class="mono">02.3 · Summarize</span><span class="off-badge">Off</span><span class="c-check"><svg><use href="#i-chk"/></svg></span></div><div><div class="c-title">Never retype call notes</div><div class="c-desc">Calls become notes and next steps.</div></div></div>
+      <div class="layer full">
+        <div class="f-top"><span class="mono">02.3 · Summarize</span><span class="mono">Call · 12:04</span></div>
+        <div class="f-title">Never retype call notes</div>
+        <p class="f-body">Calls and meetings become contact notes and next-step tasks.</p>
+        <div class="demo"><div class="sumd">
+          <div class="wave"><i style="animation-delay:0s"></i><i style="animation-delay:.12s"></i><i style="animation-delay:.3s"></i><i style="animation-delay:.05s"></i><i style="animation-delay:.22s"></i><i style="animation-delay:.4s"></i><i style="animation-delay:.15s"></i><i style="animation-delay:.33s"></i></div>
+          <div class="nl"><div>Pre-approved up to $720K</div><div>Wants a yard for the dog</div><div><span class="bx"></span>Send Zilker listings by Fri</div></div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- Ask -->
+    <section class="tile t-ask" data-step="2" data-f="ask" aria-label="Ask">
+      <div class="layer compact"><div class="c-top"><span class="mono">02.4 · Ask</span><span class="off-badge">Off</span><span class="c-check"><svg><use href="#i-chk"/></svg></span></div><div><div class="c-title">Ask your database anything</div><div class="c-desc">Plain questions, instant answers.</div></div></div>
+      <div class="layer full">
+        <div class="f-top"><span class="mono">02.4 · Ask</span><span class="mono">⌘K</span></div>
+        <div class="f-title">Ask your database anything</div>
+        <p class="f-body">Plain-language questions about your contacts, deals and history.</p>
+        <div class="demo">
+          <div class="q"><span class="k">ASK</span><span class="qt"><span>Who in my sphere haven't I talked to in 90 days?</span></span></div>
+          <div class="ans"><span class="n">18</span><p>contacts · 7 past clients,<br>11 friends and family</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Personalize -->
+    <section class="tile t-per" data-step="3" aria-label="Personalize">
+      <div class="layer compact"><div class="c-top"><span class="mono">03 · Personalize</span><span class="c-check"><svg><use href="#i-chk"/></svg></span></div><div><div class="c-title">Make it yours</div><div class="c-meta mono" id="perMeta">4/4 on · Warm</div></div></div>
+      <div class="layer full">
+        <div class="f-top"><span class="mono">03 · Personalize</span><span class="mono" id="perCount">4 of 4 on</span></div>
+        <div class="f-title">Make KWIQ yours</div>
+        <div class="per-grid">
+          <div>
+            <div class="col-label mono">Features</div>
+            <button class="feat" type="button" role="switch" aria-checked="true" data-f="prioritize" style="--sc:var(--sage)"><span class="sw8"></span><span class="fn">Prioritize</span><span class="tg"></span></button>
+            <button class="feat" type="button" role="switch" aria-checked="true" data-f="draft" style="--sc:var(--butter)"><span class="sw8"></span><span class="fn">Draft</span><span class="tg"></span></button>
+            <button class="feat" type="button" role="switch" aria-checked="true" data-f="summarize" style="--sc:var(--lilac)"><span class="sw8"></span><span class="fn">Summarize</span><span class="tg"></span></button>
+            <button class="feat" type="button" role="switch" aria-checked="true" data-f="ask" style="--sc:var(--sky)"><span class="sw8"></span><span class="fn">Ask</span><span class="tg"></span></button>
+          </div>
+          <div role="radiogroup" aria-label="Writing tone">
+            <div class="col-label mono">Writing tone</div>
+            <button class="tone" type="button" role="radio" aria-checked="true" data-t="warm"><span class="tn">Warm<span class="rd"></span></span><span class="ts">“Hi Priya! I saw you've been looking…”</span></button>
+            <button class="tone" type="button" role="radio" aria-checked="false" data-t="direct"><span class="tn">Direct<span class="rd"></span></span><span class="ts">“Hi Priya, two new 3-bedroom homes…”</span></button>
+            <button class="tone" type="button" role="radio" aria-checked="false" data-t="polished"><span class="tn">Polished<span class="rd"></span></span><span class="ts">“Good morning, Priya. Two new homes…”</span></button>
+          </div>
+        </div>
+        <div class="trust"><svg><use href="#i-lock"/></svg>KWIQ only uses data in your Command account. Nothing sends without your OK.</div>
+      </div>
+    </section>
+
+    <!-- Try it -->
+    <section class="tile t-try" data-step="4" aria-label="Try it">
+      <div class="layer compact"><div class="c-top"><span class="mono">04 · Try it</span><span class="c-check"><svg><use href="#i-chk"/></svg></span></div><div><div class="c-title">Your first follow-up</div><div class="c-meta mono">Priya Patel · 92</div></div></div>
+      <div class="layer full">
+        <div class="f-top"><span class="mono">04 · Try it</span><span class="mono status" id="status"><span id="statusText">Ranking 214 leads</span><span class="blk"></span></span></div>
+        <div class="f-title">Here's who to call first today</div>
+        <div class="try-grid">
+          <div class="lead pending" id="lead">
+            <div class="lead-h"><span class="av">PP</span><div><b>Priya Patel</b><span class="mono">Buyer · Top lead today</span></div></div>
+            <div class="sigs">
+              <div class="sig"><span class="mono">01</span>Viewed 4 listings in 78704 last night</div>
+              <div class="sig"><span class="mono">02</span>Saved search: 3 bd under $650K</div>
+            </div>
+            <div>
+              <div class="score"><span class="big">92</span><span class="lbl mono">Lead score<br>of 100</span></div>
+              <div class="meter"><i></i></div>
+            </div>
+          </div>
+          <div class="draft pending" id="draft">
+            <div class="draft-h mono"><span>Text message draft</span><span class="tt" id="toneTag">Warm</span></div>
+            <div class="draft-text" id="draftText" aria-live="polite"></div>
+            <div class="draft-actions">
+              <button class="btn btn-line btn-sm" type="button" id="editBtn"><svg><use href="#i-pen"/></svg>Edit</button>
+              <button class="btn btn-line btn-sm" type="button" id="regenBtn"><svg><use href="#i-re"/></svg>Regenerate</button>
+              <span class="sp"></span>
+              <span class="used" id="used">✓ Saved to thread</span>
+              <button class="btn btn-ink btn-sm" type="button" id="useBtn">Use draft</button>
+            </div>
+          </div>
+        </div>
+        <p class="foot">KWIQ can make mistakes. Review before sending.</p>
+      </div>
+    </section>
+
+    <!-- Done -->
+    <section class="tile t-don" data-step="5" aria-label="Done">
+      <div class="layer compact"><div class="c-top"><span class="mono">05 · Done</span><span class="c-check"><svg><use href="#i-chk"/></svg></span></div><div><div class="c-title">You're all set</div><div class="c-desc" style="color:rgba(255,255,255,.6)">Find KWIQ anywhere.</div></div></div>
+      <div class="layer full">
+        <div class="f-top"><span class="mono">05 · Done</span><span class="mono" id="doneMeta">4/4 on · Warm</span></div>
+        <h2 class="done-h">You're all set</h2>
+        <p class="done-p">KWIQ is ready whenever you are. Here's where to find it.</p>
+        <div class="finds">
+          <div class="find"><span class="vis" style="background:var(--lilac)"><svg width="16" height="16"><use href="#i-spark"/></svg></span><div><b>The sparkle button</b><span>Top bar, on every page</span></div></div>
+          <div class="find"><span class="vis" style="background:var(--sky)">⌘K</span><div><b>Ask from anywhere</b><span>Press ⌘K and type a question</span></div></div>
+          <div class="find"><span class="vis" style="background:var(--sage)">▤</span><div><b>Today view</b><span>Your ranked leads every morning</span></div></div>
+        </div>
+        <div class="done-actions">
+          <button class="btn btn-white" type="button" id="goBtn">Go to Command <svg><use href="#i-arr"/></svg></button>
+          <button class="btn btn-text" type="button" id="restartBtn">Restart</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bottom" id="bottom">
+    <div class="hints mono"><span><kbd>⏎</kbd>Next</span><span><kbd>←</kbd>Back</span><span><kbd>Esc</kbd>Skip</span></div>
+    <div class="nav">
+      <button class="btn btn-line" type="button" id="backBtn"><svg><use href="#i-arl"/></svg>Back</button>
+      <button class="btn btn-ink" type="button" id="nextBtn"><span id="nextLabel">Next</span><svg><use href="#i-arr"/></svg></button>
+    </div>
+  </footer>
+</div>
+
+<a class="corner" href="index.html"><span class="n">10</span>Bento<span class="s">·</span>All directions ↗</a>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+  'use strict';
+  var RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var STEPS = ['Welcome','Capabilities','Personalize','Try it','Done'];
+  var NEXT_LABEL = {1:'Get started',2:'Personalize',3:'Try it',4:'Finish',5:'Done'};
+  var DRAFTS = {
+    warm: [
+      "Hi Priya! I saw you've been looking at a few homes in 78704. Two new 3-bedrooms hit the market this morning under $650K. Want me to set up a showing this weekend?",
+      "Morning, Priya! Two fresh 3-bedroom listings just went live in 78704, both under $650K and a lot like the homes you've been saving. I'd love to walk them with you this weekend if you're up for it!"
+    ],
+    direct: [
+      "Hi Priya, two new 3-bedroom homes in 78704 listed this morning, both under $650K. Want to see them Saturday or Sunday?",
+      "Priya, 2 new matches for your saved search: 3 bd, 78704, under $650K. I can show both this weekend. What time works?"
+    ],
+    polished: [
+      "Good morning, Priya. Two new three-bedroom homes in 78704 came to market today, each under $650K and in line with your saved search. I'd be glad to arrange private showings this weekend at your convenience.",
+      "Hello Priya, I wanted to share two new listings in 78704 that match your criteria: three bedrooms, under $650K, both listed this morning. Would a showing this weekend suit your schedule?"
+    ]
+  };
+  var TONE_NAME = {warm:'Warm',direct:'Direct',polished:'Polished'};
+
+  var state = {step:1, tone:'warm', variant:0, features:{prioritize:true,draft:true,summarize:true,ask:true}, draftKey:null, editing:false};
+  var $ = function(id){ return document.getElementById(id); };
+  var bento = $('bento');
+  var tiles = Array.prototype.slice.call(document.querySelectorAll('.tile'));
+  var pips = document.querySelectorAll('.pip');
+
+  function render(prev){
+    var s = state.step;
+    bento.className = 'bento s' + s;
+    tiles.forEach(function(t){
+      var ts = +t.getAttribute('data-step');
+      var wasActive = t.classList.contains('active');
+      t.classList.toggle('active', ts === s);
+      t.classList.toggle('lit', ts < s);
+      t.classList.toggle('done', ts < s);
+      var full = t.querySelector('.full'), compact = t.querySelector('.compact');
+      if (ts === s){ full.removeAttribute('inert'); compact.setAttribute('inert',''); t.removeAttribute('tabindex'); t.removeAttribute('role'); }
+      else { full.setAttribute('inert',''); compact.removeAttribute('inert'); t.setAttribute('tabindex','0'); t.setAttribute('role','button'); }
+      if (ts === s && !wasActive){ // retrigger micro-demo animations
+        t.classList.remove('active'); void t.offsetWidth; t.classList.add('active');
+      }
+    });
+    Array.prototype.forEach.call(pips, function(p, k){
+      p.classList.toggle('on', k < s);
+      p.classList.toggle('cur', k === s-1);
+    });
+    $('progLabel').innerHTML = '0' + s + ' / 05 · <b>' + STEPS[s-1] + '</b>';
+    $('nextLabel').textContent = NEXT_LABEL[s];
+    $('backBtn').disabled = s === 1;
+    $('bottom').classList.toggle('muted', s === 5);
+    $('skipBtn').classList.toggle('hide', s === 5);
+    if (s === 4) enterTry();
+  }
+
+  function go(s){
+    s = Math.max(1, Math.min(5, s));
+    if (s === state.step) return;
+    if (state.editing) finishEdit();
+    state.step = s; render();
+  }
+  function next(){ go(state.step + 1); }
+  function back(){ go(state.step - 1); }
+  function skip(){ go(5); }
+
+  tiles.forEach(function(t){
+    t.addEventListener('click', function(e){ if (e.target.closest('.full')) return; if (!t.classList.contains('active')) go(+t.getAttribute('data-step')); });
+    t.addEventListener('keydown', function(e){
+      if (e.target === t && !t.classList.contains('active') && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); e.stopPropagation(); go(+t.getAttribute('data-step')); }
+    });
+  });
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('[data-act]'); if (!b) return;
+    var a = b.getAttribute('data-act');
+    if (a === 'next') next(); else if (a === 'skip') skip();
+  });
+  $('nextBtn').addEventListener('click', next);
+  $('backBtn').addEventListener('click', back);
+  $('skipBtn').addEventListener('click', skip);
+
+  // Personalize
+  function syncFeatures(){
+    var n = 0;
+    for (var k in state.features){
+      if (state.features[k]) n++;
+      var tile = document.querySelector('.tile[data-f="'+k+'"]');
+      tile.classList.toggle('off', !state.features[k]);
+      document.querySelector('.feat[data-f="'+k+'"]').setAttribute('aria-checked', String(state.features[k]));
+    }
+    $('perCount').textContent = n + ' of 4 on';
+    var meta = n + '/4 on · ' + TONE_NAME[state.tone];
+    $('perMeta').textContent = meta; $('doneMeta').textContent = meta;
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.feat'), function(f){
+    f.addEventListener('click', function(){ var k = f.getAttribute('data-f'); state.features[k] = !state.features[k]; syncFeatures(); });
+  });
+  var tones = document.querySelectorAll('.tone');
+  function setTone(t){
+    state.tone = t; state.variant = 0;
+    Array.prototype.forEach.call(tones, function(b){ b.setAttribute('aria-checked', String(b.getAttribute('data-t') === t)); });
+    $('toneTag').textContent = TONE_NAME[t];
+    syncFeatures();
+  }
+  Array.prototype.forEach.call(tones, function(b){
+    b.addEventListener('click', function(){ setTone(b.getAttribute('data-t')); });
+    b.addEventListener('keydown', function(e){
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp'){
+        e.preventDefault();
+        var order = ['warm','direct','polished'], k = order.indexOf(state.tone);
+        k = (k + (e.key === 'ArrowDown' ? 1 : 2)) % 3;
+        setTone(order[k]); document.querySelector('.tone[data-t="'+order[k]+'"]').focus();
+      }
+    });
+  });
+
+  // Try it
+  var tok = 0, timers = [];
+  function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
+  function later(fn, ms){ timers.push(setTimeout(fn, ms)); }
+  function setStatus(txt, busy){ $('statusText').textContent = txt; $('status').classList.toggle('idle', !busy); }
+  function stream(el, text){
+    var t = ++tok; el.textContent = '';
+    if (RM){ el.textContent = text; return; }
+    el.classList.add('typing');
+    var parts = text.split(/(\s+)/), k = 0;
+    (function tick(){
+      if (t !== tok) return;
+      if (k >= parts.length){ el.classList.remove('typing'); return; }
+      el.textContent += parts[k++];
+      setTimeout(tick, /[.!?,]$/.test(parts[k-1]) ? 150 : 24 + Math.random()*44);
+    })();
+  }
+  function enterTry(){
+    var key = state.tone + state.variant;
+    if (state.draftKey === key) return;
+    state.draftKey = key;
+    clearTimers(); tok++;
+    $('used').classList.remove('show');
+    $('lead').classList.add('pending'); $('draft').classList.add('pending');
+    $('draftText').textContent = '';
+    setStatus('Ranking 214 leads', true);
+    later(function(){ $('lead').classList.remove('pending'); setStatus('Drafting · ' + TONE_NAME[state.tone], true); }, RM ? 0 : 1100);
+    later(function(){
+      $('draft').classList.remove('pending');
+      stream($('draftText'), DRAFTS[state.tone][state.variant]);
+      later(function(){ setStatus('Ready for review', false); }, RM ? 0 : 3200);
+    }, RM ? 0 : 1700);
+  }
+  function regen(){
+    if (state.editing) finishEdit();
+    state.variant = (state.variant + 1) % DRAFTS[state.tone].length;
+    state.draftKey = state.tone + state.variant;
+    clearTimers();
+    $('used').classList.remove('show');
+    setStatus('Writing another version', true);
+    stream($('draftText'), DRAFTS[state.tone][state.variant]);
+    later(function(){ setStatus('Ready for review', false); }, RM ? 0 : 3000);
+  }
+  function startEdit(){
+    tok++;
+    var el = $('draftText');
+    el.classList.remove('typing');
+    if (!el.textContent) el.textContent = DRAFTS[state.tone][state.variant];
+    el.setAttribute('contenteditable','true');
+    state.editing = true;
+    $('editBtn').lastChild.textContent = 'Save edit';
+    el.focus();
+    var r = document.createRange(); r.selectNodeContents(el); r.collapse(false);
+    var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+  }
+  function finishEdit(){
+    $('draftText').setAttribute('contenteditable','false');
+    state.editing = false;
+    $('editBtn').lastChild.textContent = 'Edit';
+  }
+  $('editBtn').addEventListener('click', function(){ state.editing ? finishEdit() : startEdit(); });
+  $('regenBtn').addEventListener('click', regen);
+  $('useBtn').addEventListener('click', function(){
+    if (state.editing) finishEdit();
+    tok++; $('draftText').classList.remove('typing');
+    if (!$('draftText').textContent) $('draftText').textContent = DRAFTS[state.tone][state.variant];
+    $('used').classList.add('show'); setStatus('Draft saved', false);
+    setTimeout(function(){ if (state.step === 4) go(5); }, RM ? 400 : 1000);
+  });
+
+  function toast(m){ var t = $('toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(function(){ t.classList.remove('show'); }, 2200); }
+  $('goBtn').addEventListener('click', function(){ toast('Opening Command · KWIQ is in the top bar'); });
+  $('restartBtn').addEventListener('click', function(){
+    clearTimers(); tok++;
+    if (state.editing) finishEdit();
+    state.features = {prioritize:true,draft:true,summarize:true,ask:true};
+    setTone('warm'); state.draftKey = null;
+    go(1);
+  });
+
+  document.addEventListener('keydown', function(e){
+    var t = e.target;
+    if (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)){ if (e.key === 'Escape'){ t.blur(); finishEdit(); } return; }
+    if (e.key === 'ArrowRight'){ e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft'){ e.preventDefault(); back(); }
+    else if (e.key === 'Enter'){ if (t.closest && t.closest('button, a, [role="button"]')) return; e.preventDefault(); next(); }
+    else if (e.key === 'Escape'){ skip(); }
+  });
+
+  document.body.classList.add('init');
+  setTone('warm');
+  render();
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ document.body.classList.remove('init'); }); });
+})();
+</script>
+</body>
+</html>

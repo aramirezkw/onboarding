@@ -1,0 +1,913 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>08 · Terminal Dark · KWIQ onboarding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0D0E; --panel:#14181A; --panel-2:#1A1F22; --line:#232A2D; --line-2:#2E373B;
+    --tx:#E4E9E6; --mut:#8C979A; --dim:#5A6468;
+    --lime:#C6F432; --lime-d:rgba(198,244,50,.12); --cyan:#5FD4E6; --amber:#F2B84B;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,monospace; --head:'Space Grotesk',system-ui,sans-serif;
+    --ease:cubic-bezier(.2,.8,.2,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--tx);font-family:var(--mono);font-size:13px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow:hidden}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  a{color:var(--cyan);text-decoration:none}
+  :focus-visible{outline:1px solid var(--lime);outline-offset:2px}
+  ::selection{background:var(--lime);color:#000}
+
+  .app{height:100vh;min-height:620px;display:grid;grid-template-columns:240px 1fr 296px;grid-template-rows:34px 1fr 38px}
+
+  /* ---------- top status ---------- */
+  .status{grid-column:1/-1;display:flex;align-items:center;gap:18px;padding:0 16px;border-bottom:1px solid var(--line);font-size:11.5px;color:var(--mut);background:var(--bg)}
+  .status .brand{display:flex;align-items:center;gap:8px;color:var(--tx);font-weight:700;letter-spacing:.02em}
+  .status .brand i{width:16px;height:16px;border-radius:4px;background:var(--lime);color:#0B0D0E;display:grid;place-items:center;font-style:normal;font-size:10px}
+  .status .sep{color:var(--dim)}
+  .status .live{display:flex;align-items:center;gap:6px}
+  .status .live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 3px var(--lime-d);animation:breathe 2.4s ease-in-out infinite}
+  @keyframes breathe{50%{box-shadow:0 0 0 5px rgba(198,244,50,0)}}
+  .status .sp{flex:1}
+  .status .clock{color:var(--tx);font-variant-numeric:tabular-nums}
+
+  /* ---------- left rail ---------- */
+  .rail{border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0;overflow:auto}
+  .sec{padding:14px 16px;border-bottom:1px solid var(--line)}
+  .sec-h{font-size:10.5px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;display:flex;justify-content:space-between}
+  .log{list-style:none}
+  .log li{display:grid;grid-template-columns:28px 22px 1fr auto;align-items:center;height:30px;padding:0 6px;margin:0 -6px;border-radius:4px;color:var(--dim);cursor:default;transition:background .2s,color .2s}
+  .log li.done{color:var(--mut);cursor:pointer}
+  .log li.done:hover{background:var(--panel)}
+  .log li.done .bx{color:var(--lime)}
+  .log li.active{color:var(--tx);background:var(--panel)}
+  .log li.active .bx{color:var(--lime)}
+  .log li.active::after{content:"";grid-column:4;width:6px;height:12px;background:var(--lime);animation:blink 1s steps(1) infinite}
+  .log li .t{font-size:10.5px;color:var(--dim)}
+  .log .n{color:var(--dim)}
+  .bar-ascii{margin-top:12px;font-size:12px;color:var(--lime);letter-spacing:-.02em;white-space:pre}
+  .bar-ascii span{color:var(--dim)}
+  .kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:12px}
+  .kv dt{color:var(--dim)}
+  .kv dd{color:var(--tx);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .kv dd.ok{color:var(--lime)}
+  .rail .grow{flex:1}
+  .spark{display:flex;align-items:flex-end;gap:2px;height:28px;margin-top:10px}
+  .spark i{flex:1;background:var(--line-2);border-radius:1px}
+  .spark i.hi{background:var(--lime)}
+
+  /* ---------- center ---------- */
+  .main{min-width:0;min-height:0;display:flex;flex-direction:column;position:relative}
+  .crumb{display:flex;align-items:center;gap:10px;height:40px;padding:0 28px;border-bottom:1px solid var(--line);font-size:11.5px;color:var(--mut)}
+  .crumb b{color:var(--lime);font-weight:500}
+  .crumb .sp{flex:1}
+  .crumb .tag{padding:2px 8px;border:1px solid var(--line-2);border-radius:999px;font-size:10.5px}
+  .view{flex:1;min-height:0;position:relative}
+  .step{position:absolute;inset:0;overflow:auto;padding:clamp(22px,3.6vh,36px) clamp(24px,3vw,44px) 24px;display:none;flex-direction:column}
+  .step.on{display:flex}
+  .pre{font-size:12px;color:var(--lime);margin-bottom:10px;display:flex;gap:8px}
+  .pre span{color:var(--dim)}
+  h1,h2{font-family:var(--head);font-weight:600;letter-spacing:-.03em;line-height:1.02;color:#F3F6F4}
+  h1{font-size:clamp(40px,4.2vw,58px)}
+  h2{font-size:clamp(30px,2.9vw,40px)}
+  h1 em,h2 em{font-style:normal;color:var(--lime)}
+  .sub{margin-top:12px;max-width:62ch;color:var(--mut);font-size:13.5px;line-height:1.6}
+  .sub b{color:var(--tx);font-weight:500}
+
+  .footer-nav{display:flex;align-items:center;gap:10px;padding:12px 28px;border-top:1px solid var(--line)}
+  .footer-nav .sp{flex:1}
+  .footer-nav .fn{color:var(--dim);font-size:11.5px}
+
+  .btn{display:inline-flex;align-items:center;gap:10px;height:36px;padding:0 14px;border-radius:6px;border:1px solid var(--line-2);background:var(--panel);color:var(--tx);font-size:12.5px;font-weight:500;transition:border-color .15s,background .15s,color .15s,transform .1s}
+  .btn:hover{border-color:var(--mut)}
+  .btn:active{transform:translateY(1px)}
+  .btn kbd,.k{font-family:var(--mono);font-size:10.5px;color:var(--mut);border:1px solid var(--line-2);border-bottom-width:2px;border-radius:4px;padding:0 5px;line-height:16px;background:var(--bg)}
+  .btn-pri{background:var(--lime);border-color:var(--lime);color:#0B0D0E;font-weight:700}
+  .btn-pri:hover{background:#D4FF4A;border-color:#D4FF4A}
+  .btn-pri kbd{background:rgba(0,0,0,.12);border-color:rgba(0,0,0,.25);color:#0B0D0E}
+  .btn-ghost{background:transparent}
+  .btn[disabled]{opacity:.35;pointer-events:none}
+  .btn[hidden]{display:none}
+
+  /* motion */
+  .in{opacity:0;transform:translateY(8px)}
+  .step.on .in{animation:in .5s var(--ease) both;animation-delay:calc(var(--i,0)*55ms)}
+  @keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @keyframes blink{50%{opacity:0}}
+  .cur{display:inline-block;width:.6em;height:1.1em;background:var(--lime);vertical-align:-3px;margin-left:1px;animation:blink 1s steps(1) infinite}
+
+  /* console */
+  .console{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .console-h{display:flex;align-items:center;gap:10px;height:32px;padding:0 12px;border-bottom:1px solid var(--line);font-size:11px;color:var(--dim)}
+  .console-h .dots{display:flex;gap:5px}
+  .console-h .dots i{width:8px;height:8px;border-radius:50%;background:var(--line-2)}
+  .console-h .sp{flex:1}
+  .console-b{padding:14px 16px;font-size:12.5px;line-height:1.75;min-height:0}
+  .ln{display:block;white-space:pre-wrap}
+  .ln.cmd{color:var(--tx)} .ln.cmd::before{content:"❯ ";color:var(--lime)}
+  .ln.ok{color:var(--mut)} .ln.ok b{color:var(--lime);font-weight:500}
+  .ln.dim{color:var(--dim)}
+  .ln.hl{color:var(--tx)}
+  .ln .c{color:var(--cyan)} .ln .l{color:var(--lime)} .ln .a{color:var(--amber)}
+
+  /* ---------- 01 welcome ---------- */
+  .wel{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(20px,2.4vw,36px);align-items:start;margin-top:auto;margin-bottom:auto}
+  .wel .ctas{display:flex;gap:10px;margin-top:26px}
+  .wel .ctas .btn{height:42px;padding:0 16px;font-size:13px}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:8px;margin-top:28px;overflow:hidden}
+  .stats>div{padding:12px 14px;border-right:1px solid var(--line)}
+  .stats>div:last-child{border-right:0}
+  .stats b{display:block;font-family:var(--head);font-size:24px;font-weight:600;letter-spacing:-.02em;color:#F3F6F4}
+  .stats span{font-size:10.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+  .stats b.l{color:var(--lime)}
+
+  /* ---------- 02 capabilities ---------- */
+  .caps{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+  .cap{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px 14px;display:flex;flex-direction:column;gap:8px;transition:border-color .2s,transform .2s var(--ease)}
+  .cap:hover{border-color:var(--line-2);transform:translateY(-2px)}
+  .cap-h{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--dim)}
+  .cap-h .id{color:var(--lime)}
+  .cap-h .sp{flex:1}
+  .cap-h .st{display:flex;align-items:center;gap:6px;color:var(--mut)}
+  .cap-h .st::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--lime)}
+  .cap h3{font-family:var(--head);font-size:19px;font-weight:600;letter-spacing:-.02em;color:#F3F6F4}
+  .cap p{color:var(--mut);font-size:12.5px;line-height:1.55}
+  .cap .ex{margin-top:auto;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;font-size:11.5px;line-height:1.7}
+  .rk{display:grid;grid-template-columns:16px 1fr 90px 26px;gap:8px;align-items:center}
+  .rk .bar{height:4px;background:var(--line-2);border-radius:2px;overflow:hidden}
+  .rk .bar i{display:block;height:100%;background:var(--mut)}
+  .rk.top{color:var(--tx)} .rk.top .bar i{background:var(--lime)} .rk.top em{color:var(--lime)}
+  .rk em{font-style:normal;text-align:right}
+  .rk span:first-child{color:var(--dim)}
+  .step.on .rk .bar i{animation:grow .9s var(--ease) both;animation-delay:.3s;transform-origin:left}
+  @keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+  /* ---------- 03 personalize ---------- */
+  .pers{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;margin-top:22px}
+  .group{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 6px}
+  .group+.group{margin-top:12px}
+  .group-h{display:flex;justify-content:space-between;padding:8px 10px 6px;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+  .opt{display:grid;grid-template-columns:34px 92px 1fr auto;align-items:center;gap:4px;width:100%;text-align:left;height:36px;padding:0 10px;border-radius:5px;color:var(--mut);transition:background .15s,color .15s}
+  .opt:hover{background:var(--panel-2)}
+  .opt .bx{color:var(--dim)}
+  .opt .nm{color:var(--tx)}
+  .opt .ds{font-size:11.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .opt[aria-checked="true"] .bx{color:var(--lime)}
+  .opt[aria-checked="false"] .nm{color:var(--dim);text-decoration:line-through;text-decoration-color:var(--line-2)}
+  .opt kbd{font-size:10px}
+  .tone-prev{margin:4px 10px 10px;padding:10px 12px;border-left:2px solid var(--lime);background:var(--bg);border-radius:0 6px 6px 0;font-size:12px;color:var(--tx);line-height:1.6;min-height:58px}
+  .cfg .console-b{font-size:12px;line-height:1.7}
+  .j-k{color:var(--cyan)} .j-s{color:var(--lime)} .j-b{color:var(--amber)} .j-p{color:var(--dim)}
+  .flash{animation:flash .6s ease}
+  @keyframes flash{from{background:rgba(198,244,50,.25)}to{background:transparent}}
+  .trust{display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding:10px 12px;border:1px dashed var(--line-2);border-radius:6px;color:var(--mut);font-size:12px}
+  .trust b{color:var(--lime);font-weight:500;white-space:nowrap}
+
+  /* ---------- 04 try it ---------- */
+  .try{display:grid;grid-template-columns:1fr;gap:12px;margin-top:18px}
+  .try .console-b{min-height:150px}
+  .plan{margin-top:8px;border:1px solid var(--line-2);border-radius:6px;padding:10px 12px;background:var(--bg)}
+  .plan .ln{line-height:1.8}
+  .plan-act{display:flex;align-items:center;gap:10px;margin-top:12px}
+  .plan-act .hint{color:var(--dim);font-size:11.5px}
+  .ranked{margin:6px 0 4px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .ranked .r{display:grid;grid-template-columns:28px 1fr 1.6fr 40px;gap:10px;padding:3px 0;font-size:12px;color:var(--mut)}
+  .ranked .r.top{color:var(--tx)}
+  .ranked .r.top em{color:var(--lime)}
+  .ranked em{font-style:normal;text-align:right}
+  .ranked .r.hd{color:var(--dim);font-size:10.5px;text-transform:uppercase;letter-spacing:.06em}
+  .lead{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+  .av{width:40px;height:40px;border-radius:8px;background:var(--panel-2);border:1px solid var(--line-2);display:grid;place-items:center;font-family:var(--head);font-weight:600;color:var(--tx)}
+  .lead h3{font-family:var(--head);font-size:20px;font-weight:600;letter-spacing:-.02em;color:#F3F6F4}
+  .lead .sig{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .chip{font-size:11px;padding:2px 8px;border-radius:999px;border:1px solid var(--line-2);color:var(--mut)}
+  .score{text-align:right}
+  .score b{display:block;font-family:var(--head);font-size:40px;font-weight:600;line-height:1;color:var(--lime);letter-spacing:-.03em}
+  .score span{font-size:10.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+  .draft{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .draft-b{padding:14px 16px}
+  .draft-to{font-size:11px;color:var(--dim);margin-bottom:8px}
+  .draft-txt{font-family:var(--head);font-size:clamp(17px,1.45vw,20px);font-weight:500;line-height:1.5;color:#F3F6F4;letter-spacing:-.005em;outline:none;white-space:pre-wrap;min-height:3em}
+  .draft-txt[contenteditable="true"]{background:var(--bg);box-shadow:inset 0 0 0 1px var(--lime);border-radius:4px;padding:6px 8px;margin:-6px -8px}
+  .draft-f{display:flex;align-items:center;gap:8px;padding:10px 12px;border-top:1px solid var(--line)}
+  .draft-f .sp{flex:1}
+  .draft-f .st{font-size:11.5px;color:var(--mut)}
+  .draft-f .st.ok{color:var(--lime)}
+  .hidden{display:none!important}
+  .reveal{animation:in .45s var(--ease) both}
+
+  /* ---------- 05 done ---------- */
+  .where{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}
+  .w{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:8px}
+  .w .lbl{font-size:10.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em}
+  .w h3{font-family:var(--head);font-size:17px;font-weight:600;color:#F3F6F4;letter-spacing:-.01em}
+  .w p{font-size:12px;color:var(--mut)}
+  .w .mock{height:54px;border:1px solid var(--line);border-radius:6px;background:var(--bg);display:flex;align-items:center;gap:6px;padding:0 10px}
+  .mock .ph{height:6px;border-radius:3px;background:var(--line-2);flex:1}
+  .mock .sbtn{width:28px;height:28px;border-radius:6px;background:var(--lime);color:#0B0D0E;display:grid;place-items:center;font-size:14px;box-shadow:0 0 0 0 rgba(198,244,50,.5);animation:ping 2.4s var(--ease) infinite}
+  @keyframes ping{0%,70%,100%{box-shadow:0 0 0 0 rgba(198,244,50,.45)}35%{box-shadow:0 0 0 7px rgba(198,244,50,0)}}
+  .mock .bk{font-size:13px;padding:2px 8px;line-height:20px}
+  .mock-list{flex-direction:column;align-items:stretch;justify-content:center;gap:3px;font-size:11px}
+  .mock-list div{display:flex;justify-content:space-between;color:var(--mut)}
+  .mock-list div:first-child{color:var(--tx)} .mock-list div:first-child em{color:var(--lime)}
+  .mock-list em{font-style:normal}
+  .done-ctas{display:flex;align-items:center;gap:16px;margin-top:22px}
+  .done-ctas .btn{height:42px;padding:0 16px;font-size:13px}
+  .restart{color:var(--cyan);font-size:12.5px}
+  .restart:hover{text-decoration:underline}
+
+  /* ---------- right panel ---------- */
+  .side{border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+  .events{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+  .ev-list{list-style:none;flex:1;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:0 16px 10px;font-size:11.5px}
+  .ev-list li{display:grid;grid-template-columns:62px 1fr;gap:8px;padding:3px 0;color:var(--mut);animation:in .35s var(--ease) both}
+  .ev-list li time{color:var(--dim);font-variant-numeric:tabular-nums}
+  .ev-list li .l{color:var(--lime)} .ev-list li .c{color:var(--cyan)} .ev-list li .a{color:var(--amber)}
+  .side .sec:first-child{border-top:0}
+  .keys{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;font-size:11.5px;color:var(--mut);align-items:center}
+  .keys .k{justify-self:start}
+  .fine{font-size:11px;color:var(--dim);line-height:1.6}
+  .fine b{color:var(--mut);font-weight:500}
+
+  /* ---------- bottom hints ---------- */
+  .hints{grid-column:1/-1;display:flex;align-items:center;gap:18px;padding:0 16px;border-top:1px solid var(--line);font-size:11.5px;color:var(--mut);background:var(--bg)}
+  .hints span{display:flex;align-items:center;gap:6px}
+  .hints .sp{flex:1}
+  .hints .fn{color:var(--dim)}
+
+  .pill{position:fixed;right:12px;bottom:7px;z-index:20;display:inline-flex;align-items:center;gap:8px;height:24px;padding:0 10px;border-radius:999px;border:1px solid var(--line-2);background:var(--panel);color:var(--tx);font-size:11px;transition:border-color .2s,color .2s}
+  .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--lime)}
+  .pill:hover{border-color:var(--lime);color:var(--lime)}
+  .hints .pad{width:260px}
+
+  @media (max-width:1360px){
+    .app{grid-template-columns:220px 1fr 264px}
+    .wel{grid-template-columns:1fr;margin-top:0;gap:18px}
+    .wel h1{font-size:clamp(36px,3.6vw,48px)}
+    .wel .ctas{margin-top:18px}
+    .wel .stats{margin-top:18px}
+    .wel .console{max-width:680px}
+    .wel .console-b{padding:10px 14px;line-height:1.6}
+  }
+  @media (max-width:1180px){
+    .app{grid-template-columns:200px 1fr}
+    .side{display:none}
+    .pers{grid-template-columns:1fr}
+    .hints .opt-hint{display:none}
+  }
+  @media (max-height:820px){
+    .caps{gap:10px}
+    .cap{padding:12px 14px}
+    .cap p{font-size:12px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important}
+    .in{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="status">
+    <span class="brand"><i>✦</i>KWIQ</span>
+    <span class="sep">/</span><span>command</span><span class="sep">/</span><span>onboarding</span>
+    <span class="live">connected</span>
+    <span class="sp"></span>
+    <span>jordan.reyes@austin-sw</span><span class="sep">·</span><span>kwiq-1</span><span class="sep">·</span>
+    <span class="clock" id="clock">--:--:--</span>
+  </header>
+
+  <!-- left step rail -->
+  <nav class="rail" aria-label="Steps">
+    <div class="sec">
+      <div class="sec-h"><span>onboarding.log</span><span id="railPct">0%</span></div>
+      <ol class="log" id="log"></ol>
+      <div class="bar-ascii" id="asciiBar"></div>
+    </div>
+    <div class="sec">
+      <div class="sec-h"><span>context</span></div>
+      <dl class="kv">
+        <dt>user</dt><dd>Jordan Reyes</dd>
+        <dt>role</dt><dd>Agent</dd>
+        <dt>mc</dt><dd>Austin Southwest</dd>
+        <dt>contacts</dt><dd>1,208</dd>
+        <dt>leads</dt><dd>214</dd>
+        <dt>status</dt><dd class="ok">● online</dd>
+      </dl>
+    </div>
+    <div class="sec">
+      <div class="sec-h"><span>lead activity · 14d</span><span>+31%</span></div>
+      <div class="spark" id="spark"></div>
+    </div>
+    <div class="grow"></div>
+  </nav>
+
+  <!-- center -->
+  <main class="main">
+    <div class="crumb">
+      <span>~/kwiq</span><span class="sep">›</span><b id="crumbStep">welcome</b>
+      <span class="sp"></span>
+      <span class="tag" id="crumbTone">tone: warm</span>
+      <span class="tag" id="crumbFeat">features: 4/4</span>
+      <span class="tag" id="crumbN">01/05</span>
+    </div>
+
+    <div class="view" aria-live="polite">
+      <!-- 01 Welcome -->
+      <section class="step" data-step="0">
+        <div class="wel">
+          <div>
+            <div class="pre in" style="--i:0">$ kwiq --hello <span>// step 01 of 05</span></div>
+            <h1 class="in" style="--i:1">Meet <em>KWIQ</em>,<br>your AI in Command</h1>
+            <p class="sub in" style="--i:2">KWIQ ranks your leads, drafts follow-ups in your voice and turns calls into notes. <b>It shows you its plan and waits for your OK before it acts.</b></p>
+            <div class="ctas in" style="--i:3">
+              <button class="btn btn-pri" type="button" data-go="next">Get started <kbd>⏎</kbd></button>
+              <button class="btn btn-ghost" type="button" data-go="skip">Skip for now <kbd>esc</kbd></button>
+            </div>
+            <div class="stats in" style="--i:4">
+              <div><b>214</b><span>leads to rank</span></div>
+              <div><b>4</b><span>capabilities</span></div>
+              <div><b class="l">0</b><span>auto-sends</span></div>
+            </div>
+          </div>
+          <div class="console in" style="--i:3">
+            <div class="console-h"><span class="dots"><i></i><i></i><i></i></span><span>kwiq — boot</span><span class="sp"></span><span id="bootT">0.0s</span></div>
+            <div class="console-b" id="boot"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 02 Capabilities -->
+      <section class="step" data-step="1">
+        <div class="pre in" style="--i:0">$ kwiq --capabilities <span>// 4 modules loaded</span></div>
+        <h2 class="in" style="--i:1">Four things KWIQ <em>does for you</em></h2>
+        <p class="sub in" style="--i:2">Everything runs on your Command data. You review every output.</p>
+        <div class="caps">
+          <article class="cap in" style="--i:3">
+            <div class="cap-h"><span class="id">01 prioritize</span><span class="sp"></span><span class="st">daily 7:00</span></div>
+            <h3>Know who to call first</h3>
+            <p>KWIQ ranks your leads each morning by signals like listing views, saved searches and replies.</p>
+            <div class="ex">
+              <div class="rk top"><span>1</span><span>Priya Patel</span><span class="bar"><i style="width:92%"></i></span><em>92</em></div>
+              <div class="rk"><span>2</span><span>Marcus Lee</span><span class="bar"><i style="width:81%"></i></span><em>81</em></div>
+              <div class="rk"><span>3</span><span>Dana Whitt</span><span class="bar"><i style="width:74%"></i></span><em>74</em></div>
+            </div>
+          </article>
+          <article class="cap in" style="--i:4">
+            <div class="cap-h"><span class="id">02 draft</span><span class="sp"></span><span class="st">on demand</span></div>
+            <h3>Follow up in your voice</h3>
+            <p>Texts and emails written from the lead's activity, ready for you to edit and send.</p>
+            <div class="ex"><span class="ln cmd">draft text --lead "Priya Patel"</span><span class="ln ok"><b>✓</b> 1 draft ready for review · 0 sent</span></div>
+          </article>
+          <article class="cap in" style="--i:5">
+            <div class="cap-h"><span class="id">03 summarize</span><span class="sp"></span><span class="st">after calls</span></div>
+            <h3>Never retype call notes</h3>
+            <p>Calls and meetings become contact notes and next-step tasks.</p>
+            <div class="ex"><span class="ln dim">call_0412 · Marcus Lee · 12:31</span><span class="ln ok"><b>→</b> 4 notes · 2 tasks · 1 follow-up date</span></div>
+          </article>
+          <article class="cap in" style="--i:6">
+            <div class="cap-h"><span class="id">04 ask</span><span class="sp"></span><span class="st">⌘K</span></div>
+            <h3>Ask your database anything</h3>
+            <p>Plain-language questions about your contacts, deals and activity.</p>
+            <div class="ex"><span class="ln cmd">who in my sphere haven't I talked to in 90 days?</span><span class="ln ok"><b>38</b> contacts · sorted by last touch</span></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 03 Personalize -->
+      <section class="step" data-step="2">
+        <div class="pre in" style="--i:0">$ kwiq config <span>// edit ~/.kwiq/config.json</span></div>
+        <h2 class="in" style="--i:1">Set KWIQ up <em>your way</em></h2>
+        <p class="sub in" style="--i:2">Turn features on or off and pick the tone KWIQ writes in. Press <span class="k">1</span>–<span class="k">4</span> to toggle, <span class="k">w</span> <span class="k">d</span> <span class="k">p</span> for tone.</p>
+        <div class="pers">
+          <div class="in" style="--i:3">
+            <div class="group" role="group" aria-label="Features">
+              <div class="group-h"><span>features</span><span id="featCount">4/4 enabled</span></div>
+              <div id="feats"></div>
+            </div>
+            <div class="group" role="radiogroup" aria-label="Writing tone">
+              <div class="group-h"><span>writing tone</span><span>applies to every draft</span></div>
+              <div id="tones"></div>
+              <div class="tone-prev" id="tonePrev"></div>
+            </div>
+          </div>
+          <div class="in" style="--i:4">
+            <div class="console cfg">
+              <div class="console-h"><span class="dots"><i></i><i></i><i></i></span><span>config.json</span><span class="sp"></span><span>auto-saved</span></div>
+              <div class="console-b" id="cfg"></div>
+            </div>
+            <div class="trust"><b>[data]</b><span>KWIQ only uses data in your Command account. Nothing sends without your OK.</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 04 Try it -->
+      <section class="step" data-step="3">
+        <div class="pre in" style="--i:0">$ kwiq run morning-followup <span>// step 04 of 05</span></div>
+        <h2 class="in" style="--i:1">Try it on <em>today's leads</em></h2>
+        <div class="try">
+          <div class="console in" style="--i:2">
+            <div class="console-h"><span class="dots"><i></i><i></i><i></i></span><span>kwiq — run</span><span class="sp"></span><span id="runState">awaiting approval</span></div>
+            <div class="console-b">
+              <span class="ln cmd">kwiq run morning-followup --tone <span class="l" id="planTone">warm</span></span>
+              <div class="plan" id="plan">
+                <span class="ln hl">Plan:</span>
+                <span class="ln ok"><span class="c">1.</span> Rank 214 leads by listing views, saved searches and replies</span>
+                <span class="ln ok"><span class="c">2.</span> Pick top 1</span>
+                <span class="ln ok"><span class="c">3.</span> Draft text in a <span class="l" id="planTone2">warm</span> tone</span>
+                <span class="ln ok"><span class="c">4.</span> Hold for your review · <span class="a">nothing sends</span></span>
+              </div>
+              <div class="plan-act" id="planAct">
+                <button class="btn btn-pri" type="button" id="approveBtn">Approve <kbd>⏎</kbd></button>
+                <span class="hint">KWIQ waits for your OK before it acts</span>
+              </div>
+              <div id="runOut"></div>
+            </div>
+          </div>
+          <div class="lead hidden" id="lead">
+            <div class="av">PP</div>
+            <div>
+              <h3>Priya Patel</h3>
+              <div class="sig"><span class="chip">Viewed 4 listings in 78704 last night</span><span class="chip">Saved search: 3 bd under $650K</span></div>
+            </div>
+            <div class="score"><b>92</b><span>score</span></div>
+          </div>
+          <div class="draft hidden" id="draft">
+            <div class="draft-b">
+              <div class="draft-to">to: Priya Patel · sms · tone: <span class="l" id="draftTone">warm</span> · variant <span id="draftVar">1/2</span></div>
+              <div class="draft-txt" id="draftTxt" spellcheck="false"></div>
+            </div>
+            <div class="draft-f">
+              <button class="btn" type="button" id="editBtn">Edit <kbd>e</kbd></button>
+              <button class="btn" type="button" id="regenBtn">Regenerate <kbd>r</kbd></button>
+              <button class="btn btn-pri" type="button" id="useBtn">Use draft <kbd>u</kbd></button>
+              <span class="sp"></span>
+              <span class="st" id="draftSt">KWIQ can make mistakes. Review before sending.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 05 Done -->
+      <section class="step" data-step="4">
+        <div class="pre in" style="--i:0">$ kwiq status <span>// exit 0</span></div>
+        <h1 class="in" style="--i:1">You're <em>all set</em></h1>
+        <p class="sub in" style="--i:2" id="doneSub">KWIQ runs its first ranking tomorrow at 7:00. Here's where to find it.</p>
+        <div class="where">
+          <div class="w in" style="--i:3">
+            <span class="lbl">top bar</span>
+            <div class="mock"><span class="ph"></span><span class="ph" style="flex:.4"></span><span class="sbtn">✦</span></div>
+            <h3>Sparkle button</h3>
+            <p>Open KWIQ from any page in Command.</p>
+          </div>
+          <div class="w in" style="--i:4">
+            <span class="lbl">shortcut</span>
+            <div class="mock"><span class="k bk">⌘</span><span class="k bk">K</span><span class="ph" style="margin-left:6px"></span></div>
+            <h3>Ask from anywhere</h3>
+            <p>Press ⌘K and ask about your database.</p>
+          </div>
+          <div class="w in" style="--i:5">
+            <span class="lbl">today view</span>
+            <div class="mock mock-list"><div><span>Priya Patel</span><em>92</em></div><div><span>Marcus Lee</span><em>81</em></div></div>
+            <h3>Today view</h3>
+            <p>Ranked leads and drafted follow-ups each morning.</p>
+          </div>
+        </div>
+        <div class="console in" style="--i:6;margin-top:14px">
+          <div class="console-b" id="doneLog"></div>
+        </div>
+        <div class="done-ctas in" style="--i:7">
+          <button class="btn btn-pri" type="button" id="goCmd">Go to Command <kbd>⏎</kbd></button>
+          <a class="restart" href="#" id="restart">↺ Restart</a>
+        </div>
+      </section>
+    </div>
+
+    <div class="footer-nav">
+      <button class="btn btn-ghost" type="button" id="backBtn"><kbd>←</kbd> Back</button>
+      <span class="sp"></span>
+      <span class="fn">KWIQ can make mistakes. Review before sending.</span>
+      <button class="btn btn-pri" type="button" id="nextBtn"><span id="nextLbl">Next</span> <kbd>⏎</kbd></button>
+    </div>
+  </main>
+
+  <!-- right panel -->
+  <aside class="side">
+    <div class="events">
+      <div class="sec" style="border-bottom:0;padding-bottom:6px"><div class="sec-h" style="margin:0"><span>events</span><span id="evCount">0</span></div></div>
+      <ol class="ev-list" id="events"></ol>
+    </div>
+    <div class="sec" style="border-top:1px solid var(--line)">
+      <div class="sec-h"><span>session</span></div>
+      <dl class="kv">
+        <dt>step</dt><dd id="sStep">welcome</dd>
+        <dt>tone</dt><dd id="sTone">warm</dd>
+        <dt>features</dt><dd id="sFeat">4/4</dd>
+        <dt>draft</dt><dd id="sDraft">—</dd>
+      </dl>
+    </div>
+    <div class="sec">
+      <div class="sec-h"><span>keys</span></div>
+      <div class="keys">
+        <span class="k">⏎</span><span>next / approve</span>
+        <span class="k">→</span><span>next</span>
+        <span class="k">←</span><span>back</span>
+        <span class="k">esc</span><span>skip to done</span>
+      </div>
+    </div>
+    <div class="sec" style="border-bottom:0">
+      <p class="fine"><b>Privacy.</b> KWIQ only uses data in your Command account. Nothing sends without your OK.</p>
+    </div>
+  </aside>
+
+  <footer class="hints">
+    <span><span class="k">⏎</span> next</span>
+    <span><span class="k">←</span> back</span>
+    <span><span class="k">esc</span> skip</span>
+    <span class="opt-hint" id="ctxHint"></span>
+    <span class="sp"></span>
+    <span class="fn">KWIQ can make mistakes. Review before sending.</span>
+    <span class="pad"></span>
+  </footer>
+</div>
+
+<a class="pill" href="index.html">08 · Terminal Dark · All directions ↗</a>
+
+<script>
+(function(){
+  'use strict';
+  var RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var KEYS = ['welcome','capabilities','personalize','try_it','done'];
+  var NEXT = ['Get started','Next','Save and continue','Finish','Go to Command'];
+  var FEATURES = [
+    {id:'prioritize', ds:'rank leads each morning'},
+    {id:'draft', ds:'write follow-ups in your voice'},
+    {id:'summarize', ds:'turn calls into notes + tasks'},
+    {id:'ask', ds:'answer questions about your data'}
+  ];
+  var TONES = [
+    {id:'warm', key:'w', ds:'friendly, personal'},
+    {id:'direct', key:'d', ds:'short, clear next step'},
+    {id:'polished', key:'p', ds:'professional, composed'}
+  ];
+  var DRAFTS = {
+    warm:[
+      "Hi Priya! I saw you've been looking at a few homes in 78704. Two new 3-bedrooms hit the market this morning under $650K. Want me to set up a showing this weekend?",
+      "Hi Priya, hope your week's going well! A couple of fresh 3-bedroom listings just popped up in 78704, both under $650K. I'd love to walk them with you Saturday if you're free."
+    ],
+    direct:[
+      "Hi Priya, two new 3-bed homes in 78704 listed this morning, both under $650K. Want to see them this weekend? I have Saturday at 10 or 2.",
+      "Priya, quick update: 2 new 3-bed listings in 78704 under $650K. Both match your saved search. Free to tour Saturday?"
+    ],
+    polished:[
+      "Good morning, Priya. Two new three-bedroom homes in 78704 came to market today, each under $650K and aligned with your saved search. May I arrange private showings for you this weekend?",
+      "Hello Priya, I wanted to share two newly listed three-bedroom homes in 78704, both priced under $650K. I'd be glad to schedule a showing at your convenience this weekend."
+    ]
+  };
+
+  var S = {step:-1, maxSeen:0, tone:'warm', variant:0, features:{prioritize:true,draft:true,summarize:true,ask:true},
+           run:'idle', used:false, editing:false, stepT0:Date.now(), times:[]};
+  var $ = function(id){ return document.getElementById(id); };
+  var steps = Array.prototype.slice.call(document.querySelectorAll('.step'));
+  var timers = [];
+  function later(fn, ms){ var t = setTimeout(fn, RM ? 0 : ms); timers.push(t); return t; }
+  function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
+  function pad(n){ return (n<10?'0':'')+n; }
+  function now(){ var d=new Date(); return pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds()); }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function onCount(){ var n=0; for (var k in S.features) if (S.features[k]) n++; return n; }
+
+  /* ---------- clock + spark ---------- */
+  function tick(){ $('clock').textContent = now(); }
+  tick(); setInterval(tick, 1000);
+  (function(){
+    var v=[4,6,5,8,7,9,6,10,9,12,11,14,13,17], h=$('spark');
+    v.forEach(function(x,i){ var el=document.createElement('i'); el.style.height=(x/17*100)+'%'; if(i>=11) el.className='hi'; h.appendChild(el); });
+  })();
+
+  /* ---------- events ---------- */
+  var evN = 0;
+  function ev(html){
+    var list = $('events'); var li = document.createElement('li');
+    li.innerHTML = '<time>'+now()+'</time><span>'+html+'</span>';
+    list.appendChild(li); evN++;
+    while (list.children.length > 22) list.removeChild(list.firstChild);
+    $('evCount').textContent = evN;
+  }
+
+  /* ---------- rail ---------- */
+  function renderRail(){
+    var log = $('log'); log.innerHTML = '';
+    KEYS.forEach(function(k,i){
+      var li = document.createElement('li');
+      var state = i < S.step ? 'done' : (i === S.step ? 'active' : '');
+      li.className = state;
+      var box = i < S.step ? '[✓]' : (i === S.step ? '[›]' : '[ ]');
+      var t = S.times[i] != null ? S.times[i].toFixed(1)+'s' : '';
+      li.innerHTML = '<span class="bx">'+box+'</span><span class="n">'+pad(i+1)+'</span><span>'+k+'</span>'+(i===S.step?'':'<span class="t">'+t+'</span>');
+      if (i < S.step) li.addEventListener('click', function(){ go(i); });
+      log.appendChild(li);
+    });
+    var pct = Math.round((S.step)/4*100);
+    var fill = Math.round(pct/5);
+    $('asciiBar').innerHTML = '['+'█'.repeat(fill)+'<span>'+'░'.repeat(20-fill)+'</span>] '+pad(pct)+'%';
+    $('railPct').textContent = pct+'%';
+  }
+
+  /* ---------- session ---------- */
+  function renderSession(){
+    $('sStep').textContent = KEYS[S.step];
+    $('sTone').textContent = S.tone;
+    $('sFeat').textContent = onCount()+'/4';
+    $('sDraft').textContent = S.used ? 'saved · not sent' : (S.run==='done' ? 'v'+(S.variant+1)+' ready' : '—');
+    $('crumbStep').textContent = KEYS[S.step];
+    $('crumbTone').textContent = 'tone: '+S.tone;
+    $('crumbFeat').textContent = 'features: '+onCount()+'/4';
+    $('crumbN').textContent = pad(S.step+1)+'/05';
+  }
+
+  /* ---------- step 1: boot ---------- */
+  var BOOT = [
+    ['cmd','kwiq init --user jordan.reyes'],
+    ['ok','<b>✓</b> connected to Command · <span class="c">Austin Southwest</span>'],
+    ['ok','<b>✓</b> indexed 1,208 contacts · 214 active leads'],
+    ['ok','<b>✓</b> loaded modules: prioritize, draft, summarize, ask'],
+    ['ok','<b>✓</b> permissions: read Command data · <span class="a">send = never without OK</span>'],
+    ['hl','ready. <span class="l">Hi Jordan.</span>']
+  ];
+  function runBoot(){
+    var host = $('boot'); host.innerHTML = '';
+    var t0 = Date.now();
+    BOOT.forEach(function(l, i){
+      later(function(){
+        var s = document.createElement('span'); s.className = 'ln '+l[0]+(RM?'':' reveal'); s.innerHTML = l[1];
+        host.appendChild(s);
+        $('bootT').textContent = ((Date.now()-t0)/1000).toFixed(1)+'s';
+        if (i === BOOT.length-1){ var c=document.createElement('span'); c.className='cur'; s.appendChild(c); }
+      }, 300 + i*260);
+    });
+  }
+
+  /* ---------- step 3: personalize ---------- */
+  function renderFeats(){
+    var host = $('feats'); host.innerHTML = '';
+    FEATURES.forEach(function(f,i){
+      var b = document.createElement('button');
+      b.type='button'; b.className='opt'; b.setAttribute('role','switch'); b.setAttribute('aria-checked', String(S.features[f.id]));
+      b.innerHTML = '<span class="bx">'+(S.features[f.id]?'[x]':'[ ]')+'</span><span class="nm">'+f.id+'</span><span class="ds">'+f.ds+'</span><kbd class="k">'+(i+1)+'</kbd>';
+      b.addEventListener('click', function(){ toggleFeat(i); });
+      host.appendChild(b);
+    });
+    $('featCount').textContent = onCount()+'/4 enabled';
+  }
+  function toggleFeat(i){
+    var f = FEATURES[i]; S.features[f.id] = !S.features[f.id];
+    ev('config.<span class="c">'+f.id+'</span> = <span class="'+(S.features[f.id]?'l':'a')+'">'+S.features[f.id]+'</span>');
+    renderFeats(); renderCfg(f.id); renderSession();
+  }
+  function renderTones(){
+    var host = $('tones'); host.innerHTML = '';
+    TONES.forEach(function(t){
+      var b = document.createElement('button');
+      b.type='button'; b.className='opt'; b.setAttribute('role','radio'); b.setAttribute('aria-checked', String(S.tone===t.id));
+      b.innerHTML = '<span class="bx">'+(S.tone===t.id?'(•)':'( )')+'</span><span class="nm">'+t.id+'</span><span class="ds">'+t.ds+'</span><kbd class="k">'+t.key+'</kbd>';
+      b.addEventListener('click', function(){ setTone(t.id); });
+      host.appendChild(b);
+    });
+    $('tonePrev').textContent = '“'+DRAFTS[S.tone][0].split('. ').slice(0,2).join('. ')+(/[.?!]$/.test(DRAFTS[S.tone][0].split('. ').slice(0,2).join('. '))?'':'.')+'”';
+  }
+  function setTone(id){
+    if (S.tone === id) return;
+    S.tone = id; S.variant = 0;
+    ev('config.<span class="c">tone</span> = <span class="l">"'+id+'"</span>');
+    renderTones(); renderCfg('tone'); renderSession();
+  }
+  function renderCfg(flash){
+    var L = [];
+    L.push('<span class="j-p">{</span>');
+    L.push('  <span class="j-k">"user"</span><span class="j-p">:</span> <span class="j-s">"jordan.reyes"</span><span class="j-p">,</span>');
+    L.push('<span data-k="tone">  <span class="j-k">"tone"</span><span class="j-p">:</span> <span class="j-s">"'+S.tone+'"</span><span class="j-p">,</span></span>');
+    L.push('  <span class="j-k">"features"</span><span class="j-p">: {</span>');
+    FEATURES.forEach(function(f,i){
+      L.push('<span data-k="'+f.id+'">    <span class="j-k">"'+f.id+'"</span><span class="j-p">:</span> <span class="j-b">'+S.features[f.id]+'</span>'+(i<3?'<span class="j-p">,</span>':'')+'</span>');
+    });
+    L.push('  <span class="j-p">},</span>');
+    L.push('  <span class="j-k">"data_scope"</span><span class="j-p">:</span> <span class="j-s">"command_account_only"</span><span class="j-p">,</span>');
+    L.push('  <span class="j-k">"send_requires_approval"</span><span class="j-p">:</span> <span class="j-b">true</span>');
+    L.push('<span class="j-p">}</span>');
+    $('cfg').innerHTML = L.map(function(l){ return '<span class="ln">'+l+'</span>'; }).join('');
+    if (flash && !RM){ var el = $('cfg').querySelector('[data-k="'+flash+'"]'); if (el){ el.parentNode.classList.add('flash'); } }
+  }
+
+  /* ---------- step 4: try it ---------- */
+  var streamT = null;
+  function stopStream(){ if (streamT){ clearTimeout(streamT); streamT = null; } }
+  function resetTry(){
+    stopStream(); setEditing(false);
+    S.run = 'pending'; S.used = false;
+    $('planTone').textContent = S.tone; $('planTone2').textContent = S.tone;
+    $('plan').style.display = '';
+    $('planAct').classList.remove('hidden');
+    $('approveBtn').disabled = false;
+    $('runOut').innerHTML = '';
+    $('runState').textContent = 'awaiting approval';
+    $('lead').classList.add('hidden'); $('draft').classList.add('hidden');
+    $('draftTxt').textContent = '';
+    $('draftSt').textContent = 'KWIQ can make mistakes. Review before sending.'; $('draftSt').className='st';
+    $('nextBtn').disabled = false;
+    ev('plan proposed · <span class="a">waiting for approval</span>');
+  }
+  function out(cls, html){
+    var s = document.createElement('span'); s.className = 'ln '+cls+(RM?'':' reveal'); s.innerHTML = html;
+    $('runOut').appendChild(s); return s;
+  }
+  function approve(){
+    if (S.run !== 'pending') return;
+    S.run = 'running';
+    $('approveBtn').disabled = true;
+    $('planAct').classList.add('hidden');
+    $('plan').style.display = 'none';
+    $('runState').textContent = 'running';
+    ev('<span class="l">approved</span> by jordan.reyes');
+    out('ok', '<b>✓</b> plan approved · rank → pick → draft (<span class="l">'+S.tone+'</span>) → hold for review');
+    later(function(){ out('dim', '[1/3] ranking 214 leads …'); ev('rank.start n=214'); }, 250);
+    later(function(){
+      out('ok', '<b>✓</b> [1/3] ranked 214 leads in 0.42s');
+      var r = document.createElement('div'); r.className = 'ranked'+(RM?'':' reveal');
+      r.innerHTML = '<div class="r hd"><span>#</span><span>lead</span><span>top signal</span><em>score</em></div>'+
+        '<div class="r top"><span>1</span><span>Priya Patel</span><span>4 listing views · 78704</span><em>92</em></div>'+
+        '<div class="r"><span>2</span><span>Marcus Lee</span><span>replied to email</span><em>81</em></div>'+
+        '<div class="r"><span>3</span><span>Dana Whitt</span><span>saved search updated</span><em>74</em></div>';
+      $('runOut').appendChild(r);
+      ev('rank.done top=<span class="c">priya.patel</span> score=92');
+    }, 1000);
+    later(function(){
+      out('ok', '<b>✓</b> [2/3] picked top lead · <span class="c">Priya Patel</span>');
+      $('lead').classList.remove('hidden'); $('lead').classList.add('reveal');
+    }, 1500);
+    later(function(){
+      out('dim', '[3/3] drafting text · tone=<span class="l">'+S.tone+'</span>');
+      $('draft').classList.remove('hidden'); $('draft').classList.add('reveal');
+      if (!S.features.draft) out('ok', '<span class="a">note</span> draft is off in config · showing a preview anyway');
+      streamDraft();
+      var st = steps[3]; st.scrollTo({top: st.scrollHeight, behavior: RM ? 'auto' : 'smooth'});
+    }, 2000);
+  }
+  function setDraftBtns(on){ ['editBtn','regenBtn','useBtn'].forEach(function(id){ $(id).disabled = !on; }); }
+  function streamDraft(){
+    stopStream(); setEditing(false);
+    S.run = 'streaming'; setDraftBtns(false);
+    $('draftTone').textContent = S.tone; $('draftVar').textContent = (S.variant+1)+'/2';
+    $('runState').textContent = 'drafting';
+    var text = DRAFTS[S.tone][S.variant], el = $('draftTxt');
+    ev('draft.start variant='+(S.variant+1)+' tone='+S.tone);
+    function finish(){
+      S.run = 'done'; setDraftBtns(true);
+      $('runState').textContent = 'done · held for review';
+      ev('draft.ready · <span class="a">not sent</span>');
+      renderSession();
+      $('ctxHint').innerHTML = '<span class="k">e</span> edit <span class="k">r</span> regenerate <span class="k">u</span> use draft';
+    }
+    if (RM){ el.textContent = text; finish(); return; }
+    el.textContent = '';
+    var node = document.createTextNode(''), cur = document.createElement('span'); cur.className = 'cur';
+    el.appendChild(node); el.appendChild(cur);
+    var i = 0;
+    (function step(){
+      i = Math.min(text.length, i + 1 + Math.floor(Math.random()*3));
+      node.nodeValue = text.slice(0, i);
+      if (i >= text.length){ streamT = setTimeout(function(){ if (cur.parentNode) cur.parentNode.removeChild(cur); streamT=null; finish(); }, 300); return; }
+      var ch = text.charAt(i-1);
+      streamT = setTimeout(step, /[.!?]/.test(ch) ? 200 : (ch === ',' ? 100 : 18 + Math.random()*20));
+    })();
+  }
+  function setEditing(on){
+    S.editing = on;
+    var t = $('draftTxt'); t.setAttribute('contenteditable', on ? 'true' : 'false');
+    $('editBtn').innerHTML = on ? 'Done <kbd>esc</kbd>' : 'Edit <kbd>e</kbd>';
+    if (on){
+      t.focus();
+      var r = document.createRange(); r.selectNodeContents(t); r.collapse(false);
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      ev('draft.edit · manual');
+    }
+  }
+  function doEdit(){ if (S.run === 'done') setEditing(!S.editing); }
+  function doRegen(){
+    if (S.run !== 'done') return;
+    S.variant = (S.variant+1) % 2; S.used = false;
+    $('draftSt').textContent = 'KWIQ can make mistakes. Review before sending.'; $('draftSt').className='st';
+    out('dim', 'regenerate · variant '+(S.variant+1)+'/2');
+    streamDraft();
+  }
+  function doUse(){
+    if (S.run !== 'done') return;
+    setEditing(false); S.used = true;
+    $('draftSt').textContent = '✓ saved to outbox · not sent'; $('draftSt').className = 'st ok';
+    out('ok', '<b>✓</b> draft saved to outbox · <span class="a">waiting on you to send</span>');
+    ev('<span class="l">draft.use</span> → outbox');
+    renderSession();
+    later(function(){ if (S.step === 3) go(4); }, 1100);
+  }
+  $('approveBtn').addEventListener('click', approve);
+  $('editBtn').addEventListener('click', doEdit);
+  $('regenBtn').addEventListener('click', doRegen);
+  $('useBtn').addEventListener('click', doUse);
+
+  /* ---------- step 5: done ---------- */
+  function renderDone(){
+    var on = FEATURES.filter(function(f){ return S.features[f.id]; }).map(function(f){ return f.id; });
+    var L = [
+      ['ok','<b>✓</b> features enabled · <span class="c">'+(on.length ? on.join(', ') : 'none')+'</span>'],
+      ['ok','<b>✓</b> tone · <span class="l">'+S.tone+'</span>'],
+      ['ok', S.used ? '<b>✓</b> first draft saved to outbox · not sent' : '<span class="a">–</span> first draft skipped · try it from the Today view'],
+      ['dim','next run · tomorrow 07:00 · rank 214 leads']
+    ];
+    var host = $('doneLog'); host.innerHTML = '';
+    L.forEach(function(l,i){ later(function(){ var s=document.createElement('span'); s.className='ln '+l[0]+(RM?'':' reveal'); s.innerHTML=l[1]; host.appendChild(s); }, 350+i*160); });
+  }
+
+  /* ---------- navigation ---------- */
+  function go(n){
+    n = Math.max(0, Math.min(4, n));
+    if (n === S.step) return;
+    if (S.step >= 0) S.times[S.step] = (Date.now()-S.stepT0)/1000;
+    clearTimers(); stopStream(); setEditing(false);
+    S.stepT0 = Date.now();
+    var prev = S.step; S.step = n; S.maxSeen = Math.max(S.maxSeen, n);
+    steps.forEach(function(s,i){ s.classList.toggle('on', i===n); });
+    steps[n].scrollTop = 0;
+    $('backBtn').disabled = n === 0;
+    $('nextLbl').textContent = NEXT[n];
+    $('nextBtn').disabled = false;
+    $('nextBtn').hidden = n === 4;
+    $('ctxHint').innerHTML = n === 2 ? '<span class="k">1</span>–<span class="k">4</span> toggle <span class="k">w</span><span class="k">d</span><span class="k">p</span> tone' :
+                             n === 3 ? '<span class="k">⏎</span> approve plan' : '';
+    ev('step.enter <span class="c">'+KEYS[n]+'</span>'+(prev>=0?' <span style="color:var(--dim)">from '+KEYS[prev]+'</span>':''));
+    if (n === 0) runBoot();
+    if (n === 2){ renderFeats(); renderTones(); renderCfg(); }
+    if (n === 3) resetTry();
+    if (n === 4) renderDone();
+    renderRail(); renderSession();
+  }
+  function next(){
+    if (S.step === 3 && S.run === 'pending'){ approve(); return; }
+    if (S.step < 4) go(S.step+1);
+  }
+  function back(){ if (S.step > 0) go(S.step-1); }
+  function skip(){ if (S.step !== 4){ ev('<span class="a">skip</span> → done'); go(4); } }
+
+  document.querySelectorAll('[data-go]').forEach(function(b){
+    b.addEventListener('click', function(){ b.getAttribute('data-go') === 'skip' ? skip() : next(); });
+  });
+  $('nextBtn').addEventListener('click', next);
+  $('backBtn').addEventListener('click', back);
+  $('goCmd').addEventListener('click', function(){ ev('open <span class="c">command://today</span>'); });
+  $('restart').addEventListener('click', function(e){
+    e.preventDefault();
+    S.tone='warm'; S.variant=0; S.used=false; S.run='idle'; S.times=[];
+    S.features={prioritize:true,draft:true,summarize:true,ask:true};
+    ev('<span class="a">restart</span>');
+    go(0);
+  });
+
+  document.addEventListener('keydown', function(e){
+    var t = e.target;
+    if (t && (t.isContentEditable || /INPUT|TEXTAREA|SELECT/.test(t.tagName))){
+      if (e.key === 'Escape'){ e.preventDefault(); setEditing(false); t.blur(); }
+      return;
+    }
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key;
+    if (k === 'ArrowRight'){ e.preventDefault(); next(); return; }
+    if (k === 'ArrowLeft'){ e.preventDefault(); back(); return; }
+    if (k === 'Escape'){ e.preventDefault(); skip(); return; }
+    if (k === 'Enter'){
+      if (t && (t.tagName === 'BUTTON' || t.tagName === 'A')) return;
+      e.preventDefault();
+      if (S.step === 4){ $('goCmd').click(); return; }
+      next(); return;
+    }
+    if (S.step === 2){
+      if (/^[1-4]$/.test(k)){ toggleFeat(Number(k)-1); return; }
+      for (var i=0;i<TONES.length;i++){ if (TONES[i].key === k.toLowerCase()){ setTone(TONES[i].id); return; } }
+    }
+    if (S.step === 3){
+      var lk = k.toLowerCase();
+      if (lk === 'e'){ e.preventDefault(); doEdit(); }
+      else if (lk === 'r'){ doRegen(); }
+      else if (lk === 'u'){ doUse(); }
+    }
+  });
+
+  ev('session.start user=<span class="c">jordan.reyes</span>');
+  go(0);
+})();
+</script>
+</body>
+</html>

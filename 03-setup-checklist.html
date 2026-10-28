@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>03 · Setup Checklist · KWIQ Onboarding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --action:#006C84; --action-hover:#00566A; --action-tint:#E5F1F4; --action-tint-2:#F2F8FA;
+  --page:#F4F6F8; --container:#FFFFFF; --tinted:#F8FAFB;
+  --l1:#17222C; --l2:#4B5966; --l3:#7C8893; --l4:#A9B3BC;
+  --divider:#E2E7EB; --divider-strong:#CBD3DA;
+  --navy:#0F2A3A; --navy-2:#153547;
+  --success:#1F8A5B; --success-tint:#E6F4EC;
+  --kw-red:#CC0000;
+  --r:12px; --r-sm:8px; --r-xs:6px; --r-full:999px;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px; --s8:32px; --s10:40px; --s12:48px;
+  --shadow-1:0 1px 2px rgba(16,32,44,.06),0 1px 1px rgba(16,32,44,.04);
+  --shadow-2:0 8px 24px rgba(16,32,44,.10),0 2px 6px rgba(16,32,44,.06);
+  --ease:cubic-bezier(.2,.8,.2,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:Mulish,system-ui,sans-serif;font-size:14px;line-height:20px;color:var(--l1);background:var(--page);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+svg{display:block}
+.ic{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.ic.sm{width:16px;height:16px}
+.ic.xs{width:12px;height:12px;stroke-width:2.2}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---------- Chrome ---------- */
+.app{display:grid;grid-template-columns:232px minmax(0,1fr);height:100vh}
+.side{background:var(--navy);color:rgba(255,255,255,.7);display:flex;flex-direction:column;padding:var(--s4) var(--s3);gap:var(--s1);overflow:hidden}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 20px}
+.kw{width:32px;height:32px;border-radius:var(--r-xs);background:var(--kw-red);color:#fff;font-weight:800;font-size:13px;letter-spacing:-.02em;display:grid;place-items:center}
+.brand b{color:#fff;font-size:16px;font-weight:800;letter-spacing:-.01em}
+.nav-label{font-size:10px;line-height:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.38);padding:16px 10px 6px}
+.nav{display:flex;align-items:center;gap:12px;height:36px;padding:0 10px;border-radius:var(--r-sm);font-weight:700;font-size:14px;position:relative;color:inherit;text-decoration:none;transition:background .15s,color .15s;white-space:nowrap}
+.nav:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav.active{background:rgba(255,255,255,.1);color:#fff}
+.nav.active::before{content:"";position:absolute;left:-12px;top:8px;bottom:8px;width:3px;border-radius:0 3px 3px 0;background:#4FC3DA}
+.nav em{font-style:normal}
+.nav .badge{margin-left:auto;font-size:11px;line-height:16px;font-weight:800;padding:1px 7px;border-radius:var(--r-full);background:rgba(79,195,218,.18);color:#8FDCEB}
+.nav .count{margin-left:auto;font-size:12px;color:rgba(255,255,255,.45)}
+.side-foot{margin-top:auto;display:flex;align-items:center;gap:10px;padding:12px 8px 4px;border-top:1px solid rgba(255,255,255,.08)}
+.side-foot .who b{display:block;color:#fff;font-size:13px;line-height:16px}
+.side-foot .who span{font-size:12px;line-height:16px;color:rgba(255,255,255,.5)}
+.av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;flex:none}
+.av.jr{background:#2B6A7E;color:#fff}
+
+.main{display:flex;flex-direction:column;min-width:0;min-height:0}
+.top{height:64px;flex:none;background:var(--container);border-bottom:1px solid var(--divider);display:flex;align-items:center;gap:var(--s3);padding:0 var(--s6)}
+.search{flex:1;max-width:520px;height:40px;border-radius:var(--r-sm);background:var(--page);border:1px solid transparent;display:flex;align-items:center;gap:10px;padding:0 12px;color:var(--l3)}
+.search span{flex:1}
+kbd{font-family:inherit;font-size:11px;line-height:16px;font-weight:800;color:var(--l2);background:var(--container);border:1px solid var(--divider);border-bottom-width:2px;border-radius:5px;padding:0 6px}
+.top .spacer{flex:1}
+.kwiq-btn{height:40px;display:flex;align-items:center;gap:8px;padding:0 14px 0 12px;border-radius:var(--r-full);border:1px solid #BFDDE5;background:linear-gradient(180deg,#F3FAFC,#E4F2F6);color:var(--action);font-weight:800;position:relative;transition:box-shadow .2s}
+.kwiq-btn:hover{box-shadow:0 0 0 4px rgba(0,108,132,.08)}
+.kwiq-btn.pulse::after{content:"";position:absolute;inset:-4px;border-radius:inherit;border:2px solid var(--action);animation:ring 1.8s var(--ease) infinite}
+@keyframes ring{0%{opacity:.7;transform:scale(1)}100%{opacity:0;transform:scale(1.18)}}
+.icon-btn{width:40px;height:40px;border-radius:var(--r-sm);border:0;background:none;display:grid;place-items:center;color:var(--l2);position:relative}
+.icon-btn:hover{background:var(--page)}
+.icon-btn .dot{position:absolute;top:9px;right:10px;width:8px;height:8px;border-radius:50%;background:var(--kw-red);border:2px solid #fff}
+
+.content{flex:1;overflow:auto;padding:var(--s8) var(--s10) 96px;scroll-behavior:smooth}
+.wrap{max-width:1180px;margin:0 auto}
+.crumbs{display:flex;align-items:center;gap:6px;font-size:12px;line-height:16px;color:var(--l3);font-weight:700}
+.crumbs a{color:var(--l2);text-decoration:none}
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--s6);margin:var(--s2) 0 var(--s6)}
+.head h1{margin:0;font-size:24px;line-height:32px;font-weight:800;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
+.head h1 .spark{width:32px;height:32px;border-radius:var(--r-sm);background:var(--action);color:#fff;display:grid;place-items:center}
+.head p{margin:4px 0 0;color:var(--l2)}
+
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 316px;gap:var(--s6);align-items:start}
+
+/* ---------- Buttons ---------- */
+.btn{height:36px;padding:0 16px;border-radius:var(--r-sm);border:1px solid transparent;font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;transition:background .15s,border-color .15s,color .15s,transform .1s}
+.btn:active{transform:translateY(1px)}
+.btn:focus-visible,.row-head:focus-visible,.seg button:focus-visible,.switch input:focus-visible+span{outline:2px solid var(--action);outline-offset:2px}
+.btn-primary{background:var(--action);color:#fff}
+.btn-primary:hover{background:var(--action-hover)}
+.btn-secondary{background:var(--container);border-color:var(--divider-strong);color:var(--l1)}
+.btn-secondary:hover{background:var(--tinted)}
+.btn-ghost{background:none;color:var(--action);padding:0 10px}
+.btn-ghost:hover{background:var(--action-tint-2)}
+.btn-sm{height:32px;font-size:13px;padding:0 12px}
+.btn[disabled]{opacity:.5;pointer-events:none}
+.actions{display:flex;align-items:center;gap:var(--s2);margin-top:var(--s5)}
+.actions .grow{flex:1}
+
+/* ---------- Checklist ---------- */
+.card{background:var(--container);border:1px solid var(--divider);border-radius:var(--r);box-shadow:var(--shadow-1)}
+.cl-head{padding:var(--s5) var(--s5) var(--s4)}
+.cl-top{display:flex;align-items:center;justify-content:space-between;gap:var(--s4)}
+.cl-top h2{margin:0;font-size:16px;line-height:20px;font-weight:800}
+.cl-meta{display:flex;align-items:center;gap:var(--s3);font-size:12px;line-height:16px;color:var(--l2);font-weight:700}
+.cl-meta .sep{width:3px;height:3px;border-radius:50%;background:var(--l4)}
+.bar{margin-top:var(--s3);height:8px;border-radius:var(--r-full);background:#E8EDF1;overflow:hidden}
+.bar i{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#00839F,var(--action));transition:width .6s var(--ease)}
+.bar.full i{background:linear-gradient(90deg,#26A06B,var(--success))}
+
+.row{border-top:1px solid var(--divider);position:relative;transition:background .25s}
+.row.open{background:linear-gradient(180deg,#FBFDFE,#fff 40%)}
+.row.open::before{content:"";position:absolute;left:0;top:-1px;bottom:0;width:3px;background:var(--action);border-radius:0 3px 3px 0}
+.row:last-child{border-bottom-left-radius:var(--r);border-bottom-right-radius:var(--r)}
+.row-head{width:100%;border:0;background:none;text-align:left;display:grid;grid-template-columns:28px minmax(0,1fr) auto 20px;align-items:center;gap:var(--s4);padding:14px var(--s5)}
+.row.locked .row-head{cursor:default}
+.row.locked .row-title,.row.locked .row-sub{color:var(--l3)}
+.check{width:26px;height:26px;border-radius:50%;border:2px solid var(--divider-strong);display:grid;place-items:center;font-size:12px;font-weight:800;color:var(--l3);background:#fff;transition:background .3s,border-color .3s,color .3s}
+.row.open .check{border-color:var(--action);color:var(--action)}
+.check svg{display:none}
+.row.done .check{background:var(--success);border-color:var(--success);color:#fff;animation:pop .4s var(--ease)}
+.row.done .check svg{display:block}
+.row.done .check .n{display:none}
+.row.skipped .check{border-style:dashed}
+@keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+.row-title{font-weight:800;font-size:14px;line-height:20px;display:inline;background:linear-gradient(currentColor,currentColor) no-repeat 0 55%/0% 1.5px;transition:background-size .45s var(--ease),color .3s}
+.row.done .row-title{background-size:100% 1.5px;color:var(--l3)}
+.row-sub{display:block;font-size:12px;line-height:16px;color:var(--l2);margin-top:2px}
+.chip{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px;border-radius:var(--r-full);font-size:12px;line-height:16px;font-weight:700;background:var(--tinted);border:1px solid var(--divider);color:var(--l2);white-space:nowrap}
+.chip.ok{background:var(--success-tint);border-color:#CBE8D7;color:var(--success)}
+.chip.skip{background:#F6F2EA;border-color:#EADFC8;color:#8A6A2E}
+.chip.now{background:var(--action-tint);border-color:#C6E1E8;color:var(--action)}
+.chev{color:var(--l3);transition:transform .3s var(--ease)}
+.row.open .chev{transform:rotate(180deg)}
+.row-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s var(--ease)}
+.row.open .row-body{grid-template-rows:1fr}
+.row-inner{overflow:hidden;min-height:0}
+.row-pad{padding:2px var(--s5) var(--s5) 64px;opacity:0;transform:translateY(-4px);transition:opacity .3s .05s,transform .3s .05s var(--ease)}
+.row.open .row-pad{opacity:1;transform:none}
+
+/* step: welcome */
+.welcome{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:var(--s6);align-items:center}
+.welcome p{margin:0;color:var(--l2);max-width:460px}
+.welcome .lede{color:var(--l1);font-size:16px;line-height:24px;font-weight:700;margin-bottom:6px;max-width:none}
+.mini{border:1px solid var(--divider);border-radius:var(--r-sm);background:#fff;padding:12px;box-shadow:var(--shadow-2)}
+.mini-h{display:flex;align-items:center;gap:6px;font-size:11px;line-height:16px;font-weight:800;color:var(--action);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.mini-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--divider);font-size:12px;line-height:16px}
+.mini-row:first-of-type{border-top:0}
+.mini-row b{flex:1;font-weight:700}
+.mini-row .sc{font-weight:800;color:var(--action);font-size:12px}
+.av.s{width:24px;height:24px;font-size:10px}
+
+/* step: capabilities */
+.caps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s3)}
+.cap{border:1px solid var(--divider);border-radius:var(--r-sm);padding:14px;display:grid;grid-template-columns:32px minmax(0,1fr);gap:12px;background:#fff;transition:border-color .2s,box-shadow .2s,transform .2s}
+.cap:hover{border-color:#BBD9E1;box-shadow:var(--shadow-1);transform:translateY(-1px)}
+.cap .ico{width:32px;height:32px;border-radius:var(--r-sm);background:var(--action-tint);color:var(--action);display:grid;place-items:center}
+.eyebrow{font-size:11px;line-height:16px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--action)}
+.cap h4{margin:0;font-size:14px;line-height:20px;font-weight:800}
+.cap p{margin:2px 0 0;font-size:12px;line-height:16px;color:var(--l2)}
+.cap q{display:block;margin-top:8px;font-size:12px;line-height:16px;color:var(--l1);background:var(--tinted);border-radius:var(--r-xs);padding:6px 8px;quotes:none;font-weight:700}
+
+/* step: personalize */
+.pers{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--s6)}
+.sec-label{font-size:12px;line-height:16px;font-weight:800;color:var(--l2);margin:0 0 8px}
+.toggles{border:1px solid var(--divider);border-radius:var(--r-sm);overflow:hidden}
+.tg{display:flex;align-items:center;gap:12px;padding:10px 12px;border-top:1px solid var(--divider);cursor:pointer;transition:background .15s}
+.tg:first-child{border-top:0}
+.tg:hover{background:var(--tinted)}
+.tg .t{flex:1;min-width:0}
+.tg b{display:block;font-size:14px;line-height:20px}
+.tg span.d{display:block;font-size:12px;line-height:16px;color:var(--l2)}
+.switch{position:relative;width:36px;height:20px;flex:none}
+.switch input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.switch span{position:absolute;inset:0;border-radius:var(--r-full);background:#C9D2D9;transition:background .2s;pointer-events:none}
+.switch span::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2);transition:transform .2s var(--ease)}
+.switch input:checked+span{background:var(--action)}
+.switch input:checked+span::after{transform:translateX(16px)}
+.seg{display:flex;background:var(--page);border:1px solid var(--divider);border-radius:var(--r-sm);padding:3px;gap:3px}
+.seg button{flex:1;height:32px;border:0;border-radius:var(--r-xs);background:none;font-weight:700;color:var(--l2);transition:background .2s,color .2s,box-shadow .2s}
+.seg button[aria-pressed=true]{background:#fff;color:var(--action);box-shadow:var(--shadow-1)}
+.tone-desc{font-size:12px;line-height:16px;color:var(--l2);margin:8px 0 10px}
+.sample{border:1px solid var(--divider);border-radius:var(--r-sm);padding:10px 12px;background:var(--tinted);font-size:13px;line-height:20px;color:var(--l1);min-height:64px;transition:opacity .2s}
+.sample.fade{opacity:.2}
+.sample small{display:block;font-size:11px;line-height:16px;font-weight:800;color:var(--l3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.trust{display:flex;gap:10px;align-items:flex-start;margin-top:var(--s4);padding:10px 12px;border-radius:var(--r-sm);background:var(--action-tint-2);border:1px solid #D5E9EE;font-size:12px;line-height:16px;color:var(--l1)}
+.trust .ic{color:var(--action);margin-top:-1px}
+
+/* step: try it */
+.try{display:grid;grid-template-columns:240px minmax(0,1fr);gap:var(--s4)}
+.lead{border:1px solid var(--divider);border-radius:var(--r-sm);padding:14px;background:#fff;position:relative}
+.lead .rank{position:absolute;top:12px;right:12px;font-size:11px;line-height:16px;font-weight:800;color:var(--action);background:var(--action-tint);padding:2px 8px;border-radius:var(--r-full)}
+.lead-id{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.av.pp{width:40px;height:40px;background:#F2E3D5;color:#8A4B1E;font-size:13px}
+.lead-id div b{display:block;font-size:14px;line-height:20px;font-weight:800}
+.lead-id div span{display:block;font-size:12px;line-height:16px;color:var(--l2)}
+.score{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--r-sm);background:var(--tinted);margin-bottom:10px}
+.ring{--p:92;width:44px;height:44px;border-radius:50%;background:conic-gradient(var(--action) calc(var(--p)*1%),#DCE4E9 0);display:grid;place-items:center;flex:none}
+.ring b{width:34px;height:34px;border-radius:50%;background:var(--tinted);display:grid;place-items:center;font-size:14px;font-weight:800;color:var(--action)}
+.score small{display:block;font-size:12px;line-height:16px;color:var(--l2)}
+.score strong{font-size:13px;line-height:16px}
+.signals{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.signals li{display:flex;gap:8px;align-items:flex-start;font-size:12px;line-height:16px;color:var(--l1)}
+.signals .ic{color:var(--action);margin-top:0}
+.composer{border:1px solid var(--divider);border-radius:var(--r-sm);background:#fff;display:flex;flex-direction:column;overflow:hidden}
+.comp-h{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--divider);font-size:12px;line-height:16px;color:var(--l2)}
+.comp-h b{color:var(--l1)}
+.comp-h .grow{flex:1}
+.comp-b{padding:14px 14px 10px;min-height:120px;flex:1}
+.draft{font-size:14px;line-height:22px;color:var(--l1);outline:none;border-radius:var(--r-xs);transition:background .2s,box-shadow .2s;white-space:pre-wrap}
+.draft[contenteditable=true]{background:var(--tinted);box-shadow:0 0 0 2px #BFDDE5;padding:6px 8px;margin:-6px -8px}
+.caret{display:inline-block;width:2px;height:16px;background:var(--action);vertical-align:-3px;margin-left:1px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.thinking{display:flex;align-items:center;gap:8px;font-size:12px;line-height:16px;color:var(--l3);font-weight:700}
+.thinking i{width:6px;height:6px;border-radius:50%;background:var(--action);animation:dot 1s infinite ease-in-out}
+.thinking i:nth-child(2){animation-delay:.15s}.thinking i:nth-child(3){animation-delay:.3s}
+@keyframes dot{0%,100%{opacity:.25;transform:translateY(0)}50%{opacity:1;transform:translateY(-2px)}}
+.comp-f{display:flex;align-items:center;gap:6px;padding:10px 12px;border-top:1px solid var(--divider);background:var(--tinted)}
+.comp-f .grow{flex:1}
+.foot-note{font-size:12px;line-height:16px;color:var(--l3);margin-top:10px;display:flex;align-items:center;gap:6px}
+.note-off{display:none;margin-bottom:10px;font-size:12px;line-height:16px;padding:8px 10px;border-radius:var(--r-xs);background:#FFF7E6;border:1px solid #F3DFB3;color:#7A5A16}
+.draft-off .note-off{display:block}
+
+/* step: done */
+.done-hero{display:flex;align-items:center;gap:var(--s4);padding:var(--s4);border-radius:var(--r-sm);background:linear-gradient(120deg,#EAF6F1,#E6F2F6);border:1px solid #CFE6E0;margin-bottom:var(--s4)}
+.done-hero .big{width:44px;height:44px;border-radius:50%;background:var(--success);color:#fff;display:grid;place-items:center;flex:none}
+.done-hero h3{margin:0;font-size:20px;line-height:24px;font-weight:800}
+.done-hero p{margin:2px 0 0;color:var(--l2)}
+.finds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s3)}
+.find{border:1px solid var(--divider);border-radius:var(--r-sm);padding:12px;background:#fff}
+.find .vis{height:44px;border-radius:var(--r-xs);background:var(--page);display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:10px;color:var(--action);font-weight:800;font-size:12px}
+.find .vis .pill{height:28px;display:flex;align-items:center;gap:6px;padding:0 10px;border-radius:var(--r-full);border:1px solid #BFDDE5;background:#EAF5F8}
+.find b{display:block;font-size:13px;line-height:16px;font-weight:800}
+.find span{display:block;font-size:12px;line-height:16px;color:var(--l2);margin-top:2px}
+.link{border:0;background:none;color:var(--action);font-weight:700;padding:0;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(0,108,132,.35)}
+.link:hover{text-decoration-color:currentColor}
+
+/* ---------- Right rail ---------- */
+.rail{display:flex;flex-direction:column;gap:var(--s4)}
+.rail .card{padding:var(--s4)}
+.rail h3{margin:0 0 var(--s3);font-size:14px;line-height:20px;font-weight:800;display:flex;align-items:center;gap:8px}
+.can{display:grid;gap:2px}
+.can-i{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px;margin:0 -8px;border-radius:var(--r-sm);transition:opacity .25s,background .2s}
+.can-i:hover{background:var(--tinted)}
+.can-i .ico{width:28px;height:28px;border-radius:var(--r-xs);background:var(--action-tint);color:var(--action);display:grid;place-items:center}
+.can-i b{display:block;font-size:13px;line-height:16px}
+.can-i span{display:block;font-size:12px;line-height:16px;color:var(--l2)}
+.can-i em{font-style:normal;font-size:11px;line-height:16px;font-weight:800;color:var(--l3);background:var(--page);padding:0 6px;border-radius:var(--r-full);opacity:0;transition:opacity .2s}
+.can-i.off{opacity:.45}
+.can-i.off em{opacity:1}
+.video{border:0;padding:0;width:100%;text-align:left;background:none;display:block}
+.thumb{position:relative;aspect-ratio:16/9;border-radius:var(--r-sm);overflow:hidden;background:linear-gradient(135deg,#0F2A3A,#0B4A5C 60%,#006C84)}
+.thumb .ui{position:absolute;left:12%;right:12%;top:16%;bottom:-10%;background:#fff;border-radius:6px 6px 0 0;box-shadow:0 10px 30px rgba(0,0,0,.35);padding:8px;transform:perspective(600px) rotateX(8deg);transform-origin:bottom}
+.thumb .ui i{display:block;height:5px;border-radius:3px;background:#E3E9ED;margin-bottom:5px}
+.thumb .ui .t{width:40%;background:#C7D3DA;height:6px}
+.thumb .ui .bub{margin-top:8px;padding:6px;border-radius:5px;background:#E5F1F4}
+.thumb .ui .bub i{background:#9CC9D5}
+.thumb .play{position:absolute;inset:0;display:grid;place-items:center}
+.thumb .play span{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.95);color:var(--action);display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.3);transition:transform .2s var(--ease)}
+.video:hover .play span{transform:scale(1.08)}
+.thumb .dur{position:absolute;right:8px;bottom:8px;background:rgba(10,24,32,.8);color:#fff;font-size:11px;line-height:16px;font-weight:800;padding:1px 6px;border-radius:4px}
+.video b{display:block;margin-top:10px;font-size:13px;line-height:16px}
+.video span.s{display:block;font-size:12px;line-height:16px;color:var(--l2);margin-top:2px}
+.help{display:flex;gap:10px;align-items:flex-start;font-size:12px;line-height:16px;color:var(--l2)}
+.help b{display:block;color:var(--l1);font-size:13px;line-height:16px;margin-bottom:2px}
+.help .av{width:32px;height:32px;background:#E7E1F5;color:#5B3FA8}
+
+/* ---------- Misc ---------- */
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,16px);background:var(--navy);color:#fff;font-size:13px;line-height:20px;font-weight:700;padding:10px 16px;border-radius:var(--r-sm);box-shadow:var(--shadow-2);display:flex;align-items:center;gap:10px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s var(--ease);z-index:50;max-width:calc(100vw - 32px)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast .ic{color:#7FE0B0}
+.dir-pill{position:fixed;right:16px;bottom:16px;z-index:60;display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 14px;border-radius:var(--r-full);background:rgba(255,255,255,.96);border:1px solid var(--divider);box-shadow:var(--shadow-2);font-size:12px;line-height:16px;font-weight:800;color:var(--l1);text-decoration:none;backdrop-filter:blur(6px)}
+.dir-pill:hover{border-color:var(--action);color:var(--action)}
+.dir-pill span{color:var(--l3);font-weight:700}
+.keys{display:flex;align-items:center;gap:6px;font-size:12px;line-height:16px;color:var(--l3)}
+
+@media (max-width:1240px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .rail{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:start}
+  .content{padding:var(--s6) var(--s6) 96px}
+}
+@media (max-width:1120px){
+  .app{grid-template-columns:68px minmax(0,1fr)}
+  .side{padding:var(--s4) 10px}
+  .brand b,.nav span,.nav .badge,.nav .count,.nav-label,.side-foot .who{display:none}
+  .brand{padding:4px 6px 20px;justify-content:center}
+  .nav{justify-content:center;padding:0}
+  .side-foot{justify-content:center;padding:12px 0 4px}
+  .welcome{grid-template-columns:minmax(0,1fr)}
+  .welcome .mini{display:none}
+  .try{grid-template-columns:minmax(0,1fr)}
+  .rail{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rail .help-card{display:none}
+  .row-pad{padding-left:var(--s5)}
+  .search{max-width:360px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:0s !important;animation-duration:0s !important;animation-iteration-count:1 !important;scroll-behavior:auto !important}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side" aria-label="Main navigation">
+    <div class="brand"><div class="kw">kw</div><b>Command</b></div>
+    <a class="nav" href="#" data-toast="Today opens here in Command"><i data-ic="home"></i><span>Today</span></a>
+    <a class="nav" href="#" data-toast="Contacts opens here in Command"><i data-ic="users"></i><span>Contacts</span><em class="count">1,284</em></a>
+    <a class="nav" href="#" data-toast="Opportunities opens here in Command"><i data-ic="brief"></i><span>Opportunities</span></a>
+    <a class="nav" href="#" data-toast="Tasks open here in Command"><i data-ic="tasks"></i><span>Tasks</span><em class="count">8</em></a>
+    <a class="nav" href="#" data-toast="Calendar opens here in Command"><i data-ic="cal"></i><span>Calendar</span></a>
+    <a class="nav" href="#" data-toast="Marketing opens here in Command"><i data-ic="mega"></i><span>Marketing</span></a>
+    <a class="nav" href="#" data-toast="Reports open here in Command"><i data-ic="chart"></i><span>Reports</span></a>
+    <div class="nav-label">Getting started</div>
+    <a class="nav active" href="#" aria-current="page"><i data-ic="spark"></i><span>Set up KWIQ</span><em class="badge" id="navBadge">0/5</em></a>
+    <div class="side-foot">
+      <div class="av jr">JR</div>
+      <div class="who"><b>Jordan Reyes</b><span>Austin Southwest</span></div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="top">
+      <div class="search"><i data-ic="search" class="sm"></i><span>Search contacts, listings, tasks</span><kbd>⌘K</kbd></div>
+      <div class="spacer"></div>
+      <button class="kwiq-btn" id="kwiqBtn" type="button"><i data-ic="spark" class="sm"></i>Ask KWIQ</button>
+      <button class="icon-btn" type="button" aria-label="Notifications" data-toast="You have 3 new notifications"><i data-ic="bell"></i><span class="dot"></span></button>
+      <div class="av jr" aria-label="Jordan Reyes">JR</div>
+    </header>
+
+    <main class="content" id="content">
+      <div class="wrap">
+        <div class="crumbs"><a href="#">Getting started</a><span>/</span><span>KWIQ</span></div>
+        <div class="head">
+          <div>
+            <h1><span class="spark"><i data-ic="spark" class="sm"></i></span>Set up KWIQ</h1>
+            <p>Five quick steps to put your AI in Command to work, Jordan. About 6 minutes total.</p>
+          </div>
+          <div class="keys" aria-hidden="true"><kbd>⏎</kbd> next <kbd>←</kbd> back</div>
+        </div>
+
+        <div class="layout">
+          <section class="card" aria-label="KWIQ setup checklist">
+            <div class="cl-head">
+              <div class="cl-top">
+                <h2>Your setup checklist</h2>
+                <div class="cl-meta">
+                  <span id="progLabel">0 of 5 complete</span><span class="sep"></span><span id="timeLabel">About 6 min left</span>
+                  <button class="btn btn-ghost btn-sm" id="skipTop" type="button">Skip for now</button>
+                </div>
+              </div>
+              <div class="bar" id="bar" role="progressbar" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0"><i></i></div>
+            </div>
+
+            <!-- 1 Welcome -->
+            <div class="row" data-i="0">
+              <button class="row-head" type="button" aria-expanded="false">
+                <span class="check"><span class="n">1</span><i data-ic="check" class="xs"></i></span>
+                <span><span class="row-title">Meet KWIQ</span><span class="row-sub">Your AI in Command, in one minute</span></span>
+                <span class="chip" data-time="1 min"></span>
+                <i data-ic="chev" class="chev sm"></i>
+              </button>
+              <div class="row-body"><div class="row-inner"><div class="row-pad">
+                <div class="welcome">
+                  <div>
+                    <p class="lede">KWIQ is your AI in Command. It works in the background so you spend more time with clients.</p>
+                    <p>It ranks your leads every morning, drafts follow-ups in your voice and turns calls into notes and tasks. You stay in control: KWIQ drafts, you decide.</p>
+                    <div class="actions">
+                      <button class="btn btn-primary" type="button" data-act="next">Get started<i data-ic="arrow" class="sm"></i></button>
+                      <button class="btn btn-ghost" type="button" data-act="skip">Skip for now</button>
+                    </div>
+                  </div>
+                  <div class="mini" aria-hidden="true">
+                    <div class="mini-h"><i data-ic="spark" class="xs"></i>Call first today</div>
+                    <div class="mini-row"><span class="av s" style="background:#F2E3D5;color:#8A4B1E">PP</span><b>Priya Patel</b><span class="sc">92</span></div>
+                    <div class="mini-row"><span class="av s" style="background:#DDEAF7;color:#2C5C8A">MW</span><b>Marcus Webb</b><span class="sc">87</span></div>
+                    <div class="mini-row"><span class="av s" style="background:#E3F1E4;color:#2F6B37">ET</span><b>Elena Torres</b><span class="sc">81</span></div>
+                  </div>
+                </div>
+              </div></div></div>
+            </div>
+
+            <!-- 2 Capabilities -->
+            <div class="row" data-i="1">
+              <button class="row-head" type="button" aria-expanded="false">
+                <span class="check"><span class="n">2</span><i data-ic="check" class="xs"></i></span>
+                <span><span class="row-title">See what KWIQ can do</span><span class="row-sub">Four ways KWIQ saves you time every day</span></span>
+                <span class="chip" data-time="2 min"></span>
+                <i data-ic="chev" class="chev sm"></i>
+              </button>
+              <div class="row-body"><div class="row-inner"><div class="row-pad">
+                <div class="caps">
+                  <div class="cap"><span class="ico"><i data-ic="rank" class="sm"></i></span><div><div class="eyebrow">Prioritize</div><h4>Know who to call first</h4><p>KWIQ ranks your leads each morning by signals like listing views, saved searches and replies.</p></div></div>
+                  <div class="cap"><span class="ico"><i data-ic="pen" class="sm"></i></span><div><div class="eyebrow">Draft</div><h4>Follow up in your voice</h4><p>Texts and emails written from the lead's activity, ready for you to edit and send.</p></div></div>
+                  <div class="cap"><span class="ico"><i data-ic="notes" class="sm"></i></span><div><div class="eyebrow">Summarize</div><h4>Never retype call notes</h4><p>Calls and meetings become contact notes and next-step tasks.</p></div></div>
+                  <div class="cap"><span class="ico"><i data-ic="ask" class="sm"></i></span><div><div class="eyebrow">Ask</div><h4>Ask your database anything</h4><p>Get answers from your contacts and deals in plain language.</p><q>“Who in my sphere haven't I talked to in 90 days?”</q></div></div>
+                </div>
+                <div class="actions">
+                  <button class="btn btn-primary" type="button" data-act="next">Continue<i data-ic="arrow" class="sm"></i></button>
+                  <button class="btn btn-ghost" type="button" data-act="back">Back</button>
+                </div>
+              </div></div></div>
+            </div>
+
+            <!-- 3 Personalize -->
+            <div class="row" data-i="2">
+              <button class="row-head" type="button" aria-expanded="false">
+                <span class="check"><span class="n">3</span><i data-ic="check" class="xs"></i></span>
+                <span><span class="row-title">Personalize KWIQ</span><span class="row-sub">Choose features and the tone KWIQ writes in</span></span>
+                <span class="chip" data-time="1 min"></span>
+                <i data-ic="chev" class="chev sm"></i>
+              </button>
+              <div class="row-body"><div class="row-inner"><div class="row-pad">
+                <div class="pers">
+                  <div>
+                    <p class="sec-label">Features</p>
+                    <div class="toggles" id="toggles">
+                      <label class="tg"><span class="t"><b>Prioritize</b><span class="d">Rank leads every morning</span></span><span class="switch"><input type="checkbox" data-feat="prioritize" checked aria-label="Prioritize"><span></span></span></label>
+                      <label class="tg"><span class="t"><b>Draft</b><span class="d">Write texts and emails for you</span></span><span class="switch"><input type="checkbox" data-feat="draft" checked aria-label="Draft"><span></span></span></label>
+                      <label class="tg"><span class="t"><b>Summarize</b><span class="d">Turn calls into notes and tasks</span></span><span class="switch"><input type="checkbox" data-feat="summarize" checked aria-label="Summarize"><span></span></span></label>
+                      <label class="tg"><span class="t"><b>Ask</b><span class="d">Answer questions about your database</span></span><span class="switch"><input type="checkbox" data-feat="ask" checked aria-label="Ask"><span></span></span></label>
+                    </div>
+                  </div>
+                  <div>
+                    <p class="sec-label">Writing tone</p>
+                    <div class="seg" role="group" aria-label="Writing tone">
+                      <button type="button" data-tone="warm" aria-pressed="true">Warm</button>
+                      <button type="button" data-tone="direct" aria-pressed="false">Direct</button>
+                      <button type="button" data-tone="polished" aria-pressed="false">Polished</button>
+                    </div>
+                    <p class="tone-desc" id="toneDesc"></p>
+                    <div class="sample" id="toneSample"></div>
+                  </div>
+                </div>
+                <div class="trust"><i data-ic="lock" class="sm"></i><span><b>Your data stays yours.</b> KWIQ only uses data in your Command account. Nothing sends without your OK.</span></div>
+                <div class="actions">
+                  <button class="btn btn-primary" type="button" data-act="next">Save and continue<i data-ic="arrow" class="sm"></i></button>
+                  <button class="btn btn-ghost" type="button" data-act="back">Back</button>
+                </div>
+              </div></div></div>
+            </div>
+
+            <!-- 4 Try it -->
+            <div class="row" data-i="3">
+              <button class="row-head" type="button" aria-expanded="false">
+                <span class="check"><span class="n">4</span><i data-ic="check" class="xs"></i></span>
+                <span><span class="row-title">Draft your first follow-up</span><span class="row-sub">KWIQ picks your top lead and writes the text</span></span>
+                <span class="chip" data-time="2 min"></span>
+                <i data-ic="chev" class="chev sm"></i>
+              </button>
+              <div class="row-body"><div class="row-inner"><div class="row-pad" id="tryPad">
+                <div class="note-off">Draft is off in your settings. You can still try it here.</div>
+                <div class="try">
+                  <div class="lead">
+                    <span class="rank">#1 today</span>
+                    <div class="lead-id"><span class="av pp">PP</span><div><b>Priya Patel</b><span>Buyer · Zillow Premier</span></div></div>
+                    <div class="score"><div class="ring"><b>92</b></div><div><strong>Score 92</strong><small>Hot · up 18 since Friday</small></div></div>
+                    <ul class="signals">
+                      <li><i data-ic="eye" class="sm"></i>Viewed 4 listings in 78704 last night</li>
+                      <li><i data-ic="pin" class="sm"></i>Saved search: 3 bd under $650K</li>
+                      <li><i data-ic="msg" class="sm"></i>Replied to your last text in 6 min</li>
+                    </ul>
+                  </div>
+                  <div class="composer">
+                    <div class="comp-h"><i data-ic="msg" class="sm"></i><span>Text to <b>Priya Patel</b> · (512) 555-0148</span><span class="grow"></span><span class="chip now" id="toneChip">Warm tone</span></div>
+                    <div class="comp-b"><div class="draft" id="draft" aria-live="polite"></div></div>
+                    <div class="comp-f">
+                      <button class="btn btn-secondary btn-sm" type="button" id="editBtn"><i data-ic="pen" class="sm"></i><span>Edit</span></button>
+                      <button class="btn btn-secondary btn-sm" type="button" id="regenBtn"><i data-ic="refresh" class="sm"></i>Regenerate</button>
+                      <span class="grow"></span>
+                      <button class="btn btn-primary btn-sm" type="button" data-act="next" id="useBtn">Use draft</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="foot-note"><i data-ic="info" class="sm"></i>KWIQ can make mistakes. Review before sending.</div>
+                <div class="actions" style="margin-top:12px">
+                  <button class="btn btn-ghost" type="button" data-act="back">Back</button>
+                </div>
+              </div></div></div>
+            </div>
+
+            <!-- 5 Done -->
+            <div class="row" data-i="4">
+              <button class="row-head" type="button" aria-expanded="false">
+                <span class="check"><span class="n">5</span><i data-ic="check" class="xs"></i></span>
+                <span><span class="row-title">Find KWIQ anytime</span><span class="row-sub">Where KWIQ lives in Command</span></span>
+                <span class="chip" data-time="Finish"></span>
+                <i data-ic="chev" class="chev sm"></i>
+              </button>
+              <div class="row-body"><div class="row-inner"><div class="row-pad">
+                <div class="done-hero">
+                  <span class="big"><i data-ic="check"></i></span>
+                  <div><h3>You're all set</h3><p id="doneSub">KWIQ is on and ready. Here's where to find it.</p></div>
+                </div>
+                <div class="finds">
+                  <div class="find"><div class="vis"><span class="pill"><i data-ic="spark" class="sm"></i>Ask KWIQ</span></div><b>Sparkle in the top bar</b><span>Ask a question or start a draft from any page.</span></div>
+                  <div class="find"><div class="vis"><kbd>⌘</kbd><kbd>K</kbd></div><b>Press ⌘K anywhere</b><span>Type a question and KWIQ answers from your data.</span></div>
+                  <div class="find"><div class="vis"><i data-ic="home" class="sm"></i>Today</div><b>Check Today each morning</b><span>Your ranked call list and drafts are waiting.</span></div>
+                </div>
+                <div class="actions">
+                  <button class="btn btn-primary" type="button" id="goBtn">Go to Command<i data-ic="arrow" class="sm"></i></button>
+                  <span class="grow"></span>
+                  <button class="link" type="button" data-act="restart">Restart setup</button>
+                </div>
+              </div></div></div>
+            </div>
+          </section>
+
+          <aside class="rail">
+            <div class="card">
+              <h3><i data-ic="spark" class="sm" style="color:var(--action)"></i>What KWIQ can do</h3>
+              <div class="can" id="can">
+                <div class="can-i" data-feat="prioritize"><span class="ico"><i data-ic="rank" class="sm"></i></span><div><b>Prioritize</b><span>Know who to call first</span></div><em>Off</em></div>
+                <div class="can-i" data-feat="draft"><span class="ico"><i data-ic="pen" class="sm"></i></span><div><b>Draft</b><span>Follow up in your voice</span></div><em>Off</em></div>
+                <div class="can-i" data-feat="summarize"><span class="ico"><i data-ic="notes" class="sm"></i></span><div><b>Summarize</b><span>Never retype call notes</span></div><em>Off</em></div>
+                <div class="can-i" data-feat="ask"><span class="ico"><i data-ic="ask" class="sm"></i></span><div><b>Ask</b><span>Ask your database anything</span></div><em>Off</em></div>
+              </div>
+            </div>
+            <div class="card">
+              <button class="video" type="button" data-toast="The walkthrough video plays here">
+                <div class="thumb" aria-hidden="true">
+                  <div class="ui"><i class="t"></i><i style="width:80%"></i><i style="width:65%"></i><div class="bub"><i style="width:90%"></i><i style="width:70%"></i><i style="width:45%;margin:0"></i></div></div>
+                  <div class="play"><span><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M8 5.5v13l10.5-6.5z"/></svg></span></div>
+                  <span class="dur">1:32</span>
+                </div>
+                <b>Watch: KWIQ in 90 seconds</b>
+                <span class="s">See a morning with KWIQ, from call list to sent text.</span>
+              </button>
+            </div>
+            <div class="card help-card">
+              <div class="help"><span class="av">MT</span><div><b>Want a hand?</b>Book 15 minutes with Maya, your MC tech coach. <button class="link" type="button" data-toast="Maya's booking page opens here">Book a time</button></div></div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><i data-ic="check" class="sm"></i><span></span></div>
+<a class="dir-pill" href="index.html">03 · Setup Checklist <span>·</span> All directions ↗</a>
+
+<script>
+(function(){
+  'use strict';
+  var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- Icons ---------- */
+  var ICONS = {
+    spark:'<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/>',
+    home:'<path d="M3.5 10.5L12 4l8.5 6.5V20a1 1 0 0 1-1 1H15v-6H9v6H4.5a1 1 0 0 1-1-1z"/>',
+    users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.4 3.4-5.5 6.5-5.5s5.7 2.1 6.5 5.5"/><path d="M15.5 4.6a3.5 3.5 0 0 1 0 6.8M18 14.8c1.9.7 3.1 2.5 3.5 5.2"/>',
+    brief:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8.5 7V5.5a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2V7M3 12.5h18"/>',
+    tasks:'<rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M8 12l3 3 5-6"/>',
+    cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+    mega:'<path d="M3.5 10v4a1 1 0 0 0 1 1H7l6 4.5v-15L7 9H4.5a1 1 0 0 0-1 1z"/><path d="M16.5 9a4 4 0 0 1 0 6M19 6.5a7.5 7.5 0 0 1 0 11"/>',
+    chart:'<path d="M4 20V11M10 20V5M16 20v-7M21 20H3"/>',
+    search:'<circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/>',
+    bell:'<path d="M6 9a6 6 0 1 1 12 0c0 6.5 2.5 8 2.5 8h-17S6 15.5 6 9z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
+    check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+    chev:'<path d="M6 9l6 6 6-6"/>',
+    arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+    rank:'<path d="M4 6h2M4 12h2M4 18h2M10 6h10M10 12h7M10 18h4"/>',
+    pen:'<path d="M4 20h4L19.5 8.5a2.1 2.1 0 0 0-3-3L5 17v3z"/><path d="M14.5 7.5l3 3"/>',
+    notes:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3.5"/>',
+    ask:'<path d="M12 20.5a8.5 8.5 0 1 0-7.4-4.3L3.5 20.5l4.3-1.1A8.5 8.5 0 0 0 12 20.5z"/><path d="M9.6 9.5a2.5 2.5 0 1 1 3.4 2.3c-.6.3-1 .8-1 1.5v.2M12 16.6v.1"/>',
+    lock:'<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/>',
+    eye:'<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>',
+    pin:'<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',
+    msg:'<path d="M20.5 11.5a8 8 0 0 1-11.7 7.1L4 19.8l1.2-4.4a8 8 0 1 1 15.3-3.9z"/>',
+    refresh:'<path d="M20 11a8 8 0 0 0-14.6-4.5M4 4v4h4M4 13a8 8 0 0 0 14.6 4.5M20 20v-4h-4"/>',
+    info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8v.1"/>',
+    clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>'
+  };
+  function ic(name, cls){ return '<svg class="ic '+(cls||'')+'" viewBox="0 0 24 24" aria-hidden="true">'+(ICONS[name]||'')+'</svg>'; }
+  document.querySelectorAll('i[data-ic]').forEach(function(el){
+    var tmp = document.createElement('span');
+    tmp.innerHTML = ic(el.getAttribute('data-ic'), el.className);
+    var svg = tmp.firstChild;
+    if (el.getAttribute('style')) svg.setAttribute('style', el.getAttribute('style'));
+    el.replaceWith(svg);
+  });
+
+  /* ---------- Content ---------- */
+  var DRAFTS = {
+    warm: [
+      "Hi Priya! I saw you've been looking at a few homes in 78704. Two new 3-bedrooms hit the market this morning under $650K. Want me to set up a showing this weekend?",
+      "Hey Priya, hope your week's off to a great start! A couple of 3-bedroom homes in 78704 just went live, both under $650K, and they look like a great fit for you. Would Saturday or Sunday work for a quick tour?"
+    ],
+    direct: [
+      "Hi Priya, two new 3-bed homes in 78704 listed this morning, both under $650K. Want to see them this weekend? I have Saturday at 10 or Sunday at 2 open.",
+      "Priya, quick update: 2 new 3-bed listings in 78704, both under $650K, as of today. Reply with a time that works and I'll book the showings."
+    ],
+    polished: [
+      "Good morning, Priya. I noticed your interest in several homes in 78704. Two 3-bedroom properties under $650K were listed this morning, and I would be glad to arrange private showings this weekend at your convenience.",
+      "Hello Priya, I wanted to share two new 3-bedroom listings in 78704, each offered under $650K and available as of today. If it suits you, I can schedule private viewings for Saturday or Sunday."
+    ]
+  };
+  var TONE = {
+    warm:{label:'Warm', desc:'Friendly and personal, with a little energy.'},
+    direct:{label:'Direct', desc:'Short, clear and to the point.'},
+    polished:{label:'Polished', desc:'Professional and refined, never stiff.'}
+  };
+  var MINS = [1,2,1,2,0];
+  var N = 5;
+
+  /* ---------- State ---------- */
+  var S;
+  function fresh(){
+    return {cur:0, max:0, done:{}, skipped:{}, tone:'warm', variant:0, drafted:false,
+      feats:{prioritize:true, draft:true, summarize:true, ask:true}, editing:false};
+  }
+  S = fresh();
+
+  var rows = Array.prototype.slice.call(document.querySelectorAll('.row'));
+  var $ = function(id){ return document.getElementById(id); };
+  var draftEl = $('draft');
+
+  /* ---------- Render ---------- */
+  function render(){
+    var doneCount = 0, minsLeft = 0;
+    rows.forEach(function(row, i){
+      var isDone = !!S.done[i], isSkip = !!S.skipped[i] && !isDone, open = i === S.cur;
+      if (isDone) doneCount++; else if (!isSkip) minsLeft += MINS[i];
+      row.classList.toggle('open', open);
+      row.classList.toggle('done', isDone);
+      row.classList.toggle('skipped', isSkip);
+      row.classList.toggle('locked', i > S.max);
+      var head = row.querySelector('.row-head');
+      head.setAttribute('aria-expanded', open ? 'true' : 'false');
+      head.disabled = i > S.max;
+      var chip = row.querySelector('.chip[data-time]');
+      if (isDone){ chip.className = 'chip ok'; chip.innerHTML = ic('check','xs') + 'Done'; }
+      else if (isSkip){ chip.className = 'chip skip'; chip.textContent = 'Skipped'; }
+      else if (open){ chip.className = 'chip now'; chip.innerHTML = ic('clock','xs') + chip.getAttribute('data-time'); }
+      else { chip.className = 'chip'; chip.textContent = chip.getAttribute('data-time'); }
+      row.querySelector('.row-body').setAttribute('aria-hidden', open ? 'false' : 'true');
+      row.querySelectorAll('.row-pad button, .row-pad input').forEach(function(b){ b.tabIndex = open ? 0 : -1; });
+    });
+    var bar = $('bar');
+    bar.querySelector('i').style.width = (doneCount / N * 100) + '%';
+    bar.classList.toggle('full', doneCount === N);
+    bar.setAttribute('aria-valuenow', doneCount);
+    $('progLabel').textContent = doneCount + ' of ' + N + ' complete';
+    $('timeLabel').textContent = S.cur === 4 ? (doneCount === N ? 'All done' : 'Finish anytime') : 'About ' + Math.max(minsLeft,1) + ' min left';
+    $('navBadge').textContent = doneCount + '/' + N;
+    $('skipTop').style.visibility = S.cur === 4 ? 'hidden' : 'visible';
+    $('kwiqBtn').classList.toggle('pulse', S.cur === 4);
+    var skippedAny = Object.keys(S.skipped).some(function(k){ return !S.done[k]; });
+    $('doneSub').textContent = skippedAny ? "KWIQ is on with your default settings. Here's where to find it." : "KWIQ is on and ready. Here's where to find it.";
+    renderTone(); renderFeats();
+  }
+
+  function renderTone(){
+    document.querySelectorAll('[data-tone]').forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-tone') === S.tone ? 'true' : 'false'); });
+    $('toneDesc').textContent = TONE[S.tone].desc;
+    $('toneChip').textContent = TONE[S.tone].label + ' tone';
+  }
+  function renderSample(animate){
+    var el = $('toneSample');
+    var put = function(){ el.innerHTML = '<small>Sample text</small>' + escapeHTML(DRAFTS[S.tone][0]); el.classList.remove('fade'); };
+    if (animate && !REDUCED){ el.classList.add('fade'); setTimeout(put, 160); } else put();
+  }
+  function renderFeats(){
+    document.querySelectorAll('.can-i').forEach(function(el){ el.classList.toggle('off', !S.feats[el.getAttribute('data-feat')]); });
+    document.querySelectorAll('input[data-feat]').forEach(function(el){ el.checked = !!S.feats[el.getAttribute('data-feat')]; });
+    $('tryPad').classList.toggle('draft-off', !S.feats.draft);
+  }
+
+  /* ---------- Navigation ---------- */
+  function go(i, opts){
+    opts = opts || {};
+    if (opts.complete) S.done[S.cur] = true;
+    if (S.editing) toggleEdit(false);
+    S.cur = i;
+    if (i > S.max) S.max = i;
+    if (i === 4){
+      for (var k = 0; k < 4; k++){ if (!S.done[k]) S.skipped[k] = true; }
+      S.done[4] = true;
+      stopStream();
+    }
+    render();
+    if (i === 3 && !S.drafted) startDraft();
+    var row = rows[i];
+    setTimeout(function(){
+      row.scrollIntoView({block:'nearest', behavior: REDUCED ? 'auto' : 'smooth'});
+      if (opts.focus !== false){
+        var f = row.querySelector('.row-pad .btn-primary');
+        if (f) f.focus({preventScroll:true});
+      }
+    }, REDUCED ? 0 : 260);
+  }
+  function next(){
+    if (S.cur === 3){ useDraft(); return; }
+    if (S.cur < 4) go(S.cur + 1, {complete:true});
+  }
+  function back(){ if (S.cur > 0 && S.cur < 4) go(S.cur - 1); else if (S.cur === 4) go(3); }
+  function skip(){ go(4); toast('Setup skipped. KWIQ is on with default settings'); }
+  function restart(){
+    stopStream();
+    S = fresh();
+    draftEl.innerHTML = '';
+    renderSample(false);
+    go(0);
+  }
+  function useDraft(){
+    if (streaming) finishStream();
+    S.done[3] = true;
+    toast("Draft saved to Priya's texts. Send it when you're ready");
+    go(4);
+  }
+
+  /* ---------- Streaming draft ---------- */
+  var streaming = false, streamTimer = null, streamText = '', streamToken = 0;
+  function stopStream(){ clearTimeout(streamTimer); streaming = false; }
+  function finishStream(){ stopStream(); draftEl.textContent = streamText; }
+  function startDraft(){
+    S.drafted = true;
+    streamText = DRAFTS[S.tone][S.variant];
+    stopStream();
+    var token = ++streamToken;
+    $('regenBtn').disabled = true; $('editBtn').disabled = true;
+    if (REDUCED){ draftEl.textContent = streamText; $('regenBtn').disabled = false; $('editBtn').disabled = false; return; }
+    draftEl.innerHTML = '<div class="thinking"><i></i><i></i><i></i>KWIQ is drafting in your ' + TONE[S.tone].label.toLowerCase() + ' tone</div>';
+    streaming = true;
+    streamTimer = setTimeout(function(){
+      if (token !== streamToken) return;
+      var pos = 0;
+      (function tick(){
+        if (token !== streamToken || !streaming) return;
+        pos = Math.min(streamText.length, pos + 1 + (Math.random() < .35 ? 1 : 0));
+        draftEl.innerHTML = escapeHTML(streamText.slice(0, pos)) + '<span class="caret"></span>';
+        if (pos >= streamText.length){
+          streaming = false;
+          setTimeout(function(){ if (token === streamToken) draftEl.textContent = streamText; }, 600);
+          $('regenBtn').disabled = false; $('editBtn').disabled = false;
+          return;
+        }
+        var ch = streamText.charAt(pos - 1);
+        streamTimer = setTimeout(tick, /[.!?]/.test(ch) ? 220 : /,/.test(ch) ? 110 : 16 + Math.random() * 18);
+      })();
+    }, 700);
+  }
+  function escapeHTML(s){ return s.replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function toggleEdit(on){
+    if (streaming) finishStream();
+    S.editing = typeof on === 'boolean' ? on : !S.editing;
+    draftEl.contentEditable = S.editing ? 'true' : 'false';
+    $('editBtn').querySelector('span').textContent = S.editing ? 'Done editing' : 'Edit';
+    if (S.editing){
+      draftEl.focus();
+      var r = document.createRange(); r.selectNodeContents(draftEl); r.collapse(false);
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    } else { streamText = draftEl.textContent; }
+  }
+
+  /* ---------- Toast ---------- */
+  var toastTimer;
+  function toast(msg){
+    var t = $('toast');
+    t.querySelector('span').textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 2800);
+  }
+
+  /* ---------- Events ---------- */
+  rows.forEach(function(row, i){
+    row.querySelector('.row-head').addEventListener('click', function(){
+      if (i <= S.max && i !== S.cur) go(i);
+    });
+  });
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('[data-act]');
+    if (a){
+      var act = a.getAttribute('data-act');
+      if (act === 'next') next();
+      else if (act === 'back') back();
+      else if (act === 'skip') skip();
+      else if (act === 'restart') restart();
+      return;
+    }
+    var t = e.target.closest('[data-toast]');
+    if (t){ e.preventDefault(); toast(t.getAttribute('data-toast')); }
+  });
+  $('skipTop').addEventListener('click', skip);
+  $('editBtn').addEventListener('click', function(){ toggleEdit(); });
+  $('regenBtn').addEventListener('click', function(){ S.variant = (S.variant + 1) % 2; if (S.editing) toggleEdit(false); startDraft(); });
+  $('goBtn').addEventListener('click', function(){ toast('Opening your Today view with KWIQ on'); });
+  $('kwiqBtn').addEventListener('click', function(){ toast('KWIQ opens here. Press ⌘K from any page'); });
+  document.querySelectorAll('[data-tone]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var t = b.getAttribute('data-tone');
+      if (t === S.tone) return;
+      S.tone = t; S.variant = 0; S.drafted = false;
+      draftEl.innerHTML = '';
+      renderTone(); renderSample(true);
+    });
+  });
+  document.querySelectorAll('input[data-feat]').forEach(function(inp){
+    inp.addEventListener('change', function(){ S.feats[inp.getAttribute('data-feat')] = inp.checked; renderFeats(); });
+  });
+
+  document.addEventListener('keydown', function(e){
+    var t = e.target;
+    if (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) {
+      if (e.key === 'Escape' && t.isContentEditable) toggleEdit(false);
+      return;
+    }
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key === 'Enter'){
+      if (t.closest && t.closest('button, a')) return; // native activation
+      e.preventDefault(); next();
+    } else if (e.key === 'ArrowRight'){ e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft'){ e.preventDefault(); back(); }
+  });
+
+  renderSample(false);
+  render();
+  setTimeout(function(){ var f = rows[0].querySelector('.btn-primary'); if (f) f.focus({preventScroll:true}); }, 50);
+})();
+</script>
+</body>
+</html>
